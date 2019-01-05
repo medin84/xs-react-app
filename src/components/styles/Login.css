@@ -1,0 +1,63 @@
+.sign-in-page {
+  /* background: url(http://sed.mtcom.kz:91/SharedResources/xpage/img/fon.jpg) no-repeat center center fixed; */
+  background-size: cover;
+  font: 15px/1.5 Roboto, arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.sign-in-page-container {
+  padding: 2rem;
+  text-align: right;
+}
+
+.sign-in-page-title {
+  color: #333;
+  font-size: 2.35em;
+  margin: 2rem 0;
+}
+
+.sign-in-form {
+  display: inline-block;
+  max-width: 100%;
+  width: 15em;
+}
+
+.sign-in-form-row {
+  margin-bottom: 1em;
+}
+
+.sign-in-form-row__label {
+  margin-bottom: 0.15em;
+}
+
+.sign-in-form-row__field > input {
+  border: 1px solid #bbb;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 1px #ddd;
+  color: #000000;
+  font-size: 15px;
+  margin: 0;
+  min-height: 0;
+  padding: 0.2em 0.4em;
+  width: 100%;
+}
+
+.sign-in-form-action {
+  display: flex;
+}
+
+.btn.sign-in-btn-submit {
+  margin-left: auto;
+  padding: 4px 9px;
+}
+
+.sign-in-client-logo-wrapper {
+  margin-top: 2em;
+}
+
+.sign-in-client-logo {
+  max-height: 80px;
+  max-width: 100%;
+  vertical-align: middle;
+}
