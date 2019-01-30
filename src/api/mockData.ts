@@ -1,6 +1,8 @@
-const sideNavItems = [
+import { IApplicationState } from "../interfaces";
+
+const sideNavItems: any[] = [
   {
-    item: "Входящие",
+    caption: "Входящие",
     id: "entryindoc",
     tid: "indoc",
     type: "entry",
@@ -8,7 +10,7 @@ const sideNavItems = [
     hint: "Входящие",
     children: [
       {
-        item: "На регистрацию",
+        caption: "На регистрацию",
         id: "linkeid-183896283",
         tid: "eid-183896283",
         type: "entry",
@@ -16,7 +18,7 @@ const sideNavItems = [
         hint: "На регистрацию"
       },
       {
-        item: "Все документы",
+        caption: "Все документы",
         id: "linkeid-1125309213",
         tid: "eid-1125309213",
         type: "entry",
@@ -24,7 +26,7 @@ const sideNavItems = [
         hint: "Все документы"
       },
       {
-        item: "По дате регистрации",
+        caption: "По дате регистрации",
         id: "linkeid-774362529",
         tid: "eid-774362529",
         type: "entry",
@@ -32,7 +34,7 @@ const sideNavItems = [
         hint: "По дате регистрации"
       },
       {
-        item: "По корреспондентам",
+        caption: "По корреспондентам",
         id: "linkeid-1395206040",
         tid: "eid-1395206040",
         type: "entry",
@@ -40,7 +42,7 @@ const sideNavItems = [
         hint: "По корреспондентам"
       },
       {
-        item: "По получателям",
+        caption: "По получателям",
         id: "linkeid-264169499",
         tid: "eid-264169499",
         type: "entry",
@@ -48,7 +50,7 @@ const sideNavItems = [
         hint: "По получателям"
       },
       {
-        item: "По типу контроля",
+        caption: "По типу контроля",
         id: "linkeid-1975243047",
         tid: "eid-1975243047",
         type: "entry",
@@ -56,7 +58,7 @@ const sideNavItems = [
         hint: "По типу контроля"
       },
       {
-        item: "По отправителям из вышестоящих",
+        caption: "По отправителям из вышестоящих",
         id: "linkeid-980384114",
         tid: "eid-980384114",
         type: "entry",
@@ -64,7 +66,7 @@ const sideNavItems = [
         hint: "По отправителям из вышестоящих"
       },
       {
-        item: "По характеру вопроса",
+        caption: "По характеру вопроса",
         id: "linkeid-680935587",
         tid: "eid-680935587",
         type: "entry",
@@ -72,7 +74,7 @@ const sideNavItems = [
         hint: "По характеру вопроса"
       },
       {
-        item: "По языку обращения",
+        caption: "По языку обращения",
         id: "linkeid-753791474",
         tid: "eid-753791474",
         type: "entry",
@@ -80,7 +82,7 @@ const sideNavItems = [
         hint: "По языку обращения"
       },
       {
-        item: "Контроль",
+        caption: "Контроль",
         id: "subentryeid-1191006124",
         tid: "eid-1191006124",
         type: "subentry",
@@ -88,7 +90,7 @@ const sideNavItems = [
         hint: "Контроль",
         children: [
           {
-            item: "По сроку исполнения",
+            caption: "По сроку исполнения",
             id: "linkeid-615698225",
             tid: "eid-615698225",
             type: "entry",
@@ -96,7 +98,7 @@ const sideNavItems = [
             hint: "По сроку исполнения"
           },
           {
-            item: "Кол-во дней до исполнения",
+            caption: "Кол-во дней до исполнения",
             id: "linkeid-1736259588",
             tid: "eid-1736259588",
             type: "entry",
@@ -104,7 +106,7 @@ const sideNavItems = [
             hint: "Кол-во дней до исполнения"
           },
           {
-            item: "По типу контроля",
+            caption: "По типу контроля",
             id: "linkeid-638725337",
             tid: "eid-638725337",
             type: "entry",
@@ -114,7 +116,7 @@ const sideNavItems = [
         ]
       },
       {
-        item: "Просроченные документы",
+        caption: "Просроченные документы",
         id: "linkeid-123341755",
         tid: "eid-123341755",
         type: "entry",
@@ -124,7 +126,7 @@ const sideNavItems = [
     ]
   },
   {
-    item: "Исходящие",
+    caption: "Исходящие",
     id: "entryishdoc",
     tid: "ishdoc",
     type: "entry",
@@ -132,7 +134,7 @@ const sideNavItems = [
     hint: "Исходящие",
     children: [
       {
-        item: "На регистрацию",
+        caption: "На регистрацию",
         id: "linkeid-860707521",
         tid: "eid-860707521",
         type: "entry",
@@ -140,7 +142,7 @@ const sideNavItems = [
         hint: "На регистрацию"
       },
       {
-        item: "Все документы",
+        caption: "Все документы",
         id: "linkeid-118638369",
         tid: "eid-118638369",
         type: "entry",
@@ -148,7 +150,7 @@ const sideNavItems = [
         hint: "Все документы"
       },
       {
-        item: "По виду отправки",
+        caption: "По виду отправки",
         id: "linkeid-94597850",
         tid: "eid-94597850",
         type: "entry",
@@ -156,7 +158,7 @@ const sideNavItems = [
         hint: "По виду отправки"
       },
       {
-        item: "По дате регистрации",
+        caption: "По дате регистрации",
         id: "linkeid-1946854337",
         tid: "eid-1946854337",
         type: "entry",
@@ -164,7 +166,7 @@ const sideNavItems = [
         hint: "По дате регистрации"
       },
       {
-        item: "По департаментам",
+        caption: "По департаментам",
         id: "linkeid-1875150889",
         tid: "eid-1875150889",
         type: "entry",
@@ -172,7 +174,7 @@ const sideNavItems = [
         hint: "По департаментам"
       },
       {
-        item: "По получателям",
+        caption: "По получателям",
         id: "linkeid-1592978984",
         tid: "eid-1592978984",
         type: "entry",
@@ -180,7 +182,7 @@ const sideNavItems = [
         hint: "По получателям"
       },
       {
-        item: "По исполнителям",
+        caption: "По исполнителям",
         id: "linkeid-686069811",
         tid: "eid-686069811",
         type: "entry",
@@ -188,7 +190,7 @@ const sideNavItems = [
         hint: "По исполнителям"
       },
       {
-        item: "По номенклатуре",
+        caption: "По номенклатуре",
         id: "linkeid-666975355",
         tid: "eid-666975355",
         type: "entry",
@@ -198,7 +200,7 @@ const sideNavItems = [
     ]
   },
   {
-    item: "Приказы",
+    caption: "Приказы",
     id: "entryord",
     tid: "ord",
     type: "entry",
@@ -206,7 +208,7 @@ const sideNavItems = [
     hint: "Приказы",
     children: [
       {
-        item: "На регистрацию",
+        caption: "На регистрацию",
         id: "linkeid-850405289",
         tid: "eid-850405289",
         type: "entry",
@@ -214,7 +216,7 @@ const sideNavItems = [
         hint: "На регистрацию"
       },
       {
-        item: "Просроченные документы",
+        caption: "Просроченные документы",
         id: "linkeid-375061118",
         tid: "eid-375061118",
         type: "entry",
@@ -222,7 +224,7 @@ const sideNavItems = [
         hint: "Просроченные документы"
       },
       {
-        item: "Все документы",
+        caption: "Все документы",
         id: "linkeid-527060132",
         tid: "eid-527060132",
         type: "entry",
@@ -230,7 +232,7 @@ const sideNavItems = [
         hint: "Все документы"
       },
       {
-        item: "Исполненные",
+        caption: "Исполненные",
         id: "linkeid-359413363",
         tid: "eid-359413363",
         type: "entry",
@@ -238,7 +240,7 @@ const sideNavItems = [
         hint: "Исполненные"
       },
       {
-        item: "На исполнении",
+        caption: "На исполнении",
         id: "linkeid-1622322361",
         tid: "eid-1622322361",
         type: "entry",
@@ -246,7 +248,7 @@ const sideNavItems = [
         hint: "На исполнении"
       },
       {
-        item: "По типу",
+        caption: "По типу",
         id: "linkeid-1527840274",
         tid: "eid-1527840274",
         type: "entry",
@@ -254,7 +256,7 @@ const sideNavItems = [
         hint: "По типу"
       },
       {
-        item: "По подготовителю",
+        caption: "По подготовителю",
         id: "linkeid-1808625794",
         tid: "eid-1808625794",
         type: "entry",
@@ -262,7 +264,7 @@ const sideNavItems = [
         hint: "По подготовителю"
       },
       {
-        item: "По автору подписи",
+        caption: "По автору подписи",
         id: "linkeid-1119796931",
         tid: "eid-1119796931",
         type: "entry",
@@ -270,7 +272,7 @@ const sideNavItems = [
         hint: "По автору подписи"
       },
       {
-        item: "По сроку исполнения",
+        caption: "По сроку исполнения",
         id: "linkeid-836814156",
         tid: "eid-836814156",
         type: "entry",
@@ -278,7 +280,7 @@ const sideNavItems = [
         hint: "По сроку исполнения"
       },
       {
-        item: "По исполнителям",
+        caption: "По исполнителям",
         id: "linkeid-914924313",
         tid: "eid-914924313",
         type: "entry",
@@ -286,7 +288,7 @@ const sideNavItems = [
         hint: "По исполнителям"
       },
       {
-        item: "По дате регистрации",
+        caption: "По дате регистрации",
         id: "linkeid-1468165392",
         tid: "eid-1468165392",
         type: "entry",
@@ -296,7 +298,7 @@ const sideNavItems = [
     ]
   },
   {
-    item: "Договора",
+    caption: "Договора",
     id: "entrycontracts",
     tid: "contracts",
     type: "entry",
@@ -304,7 +306,7 @@ const sideNavItems = [
     hint: "Договора",
     children: [
       {
-        item: "На регистрацию",
+        caption: "На регистрацию",
         id: "linkeid-2124015014",
         tid: "eid-2124015014",
         type: "entry",
@@ -312,7 +314,7 @@ const sideNavItems = [
         hint: "На регистрацию"
       },
       {
-        item: "По дате регистрации",
+        caption: "По дате регистрации",
         id: "linkeid-34161041",
         tid: "eid-34161041",
         type: "entry",
@@ -320,7 +322,7 @@ const sideNavItems = [
         hint: "По дате регистрации"
       },
       {
-        item: "Все документы",
+        caption: "Все документы",
         id: "linkeid-192444398",
         tid: "eid-192444398",
         type: "entry",
@@ -328,7 +330,7 @@ const sideNavItems = [
         hint: "Все документы"
       },
       {
-        item: "По статусу",
+        caption: "По статусу",
         id: "linkeid-1926025517",
         tid: "eid-1926025517",
         type: "entry",
@@ -336,7 +338,7 @@ const sideNavItems = [
         hint: "По статусу"
       },
       {
-        item: "По исполнителям",
+        caption: "По исполнителям",
         id: "linkeid-766379610",
         tid: "eid-766379610",
         type: "entry",
@@ -344,7 +346,7 @@ const sideNavItems = [
         hint: "По исполнителям"
       },
       {
-        item: "По заказчику",
+        caption: "По заказчику",
         id: "linkeid-1643019260",
         tid: "eid-1643019260",
         type: "entry",
@@ -354,7 +356,7 @@ const sideNavItems = [
     ]
   },
   {
-    item: "Служебные записки",
+    caption: "Служебные записки",
     id: "entryintdoc",
     tid: "intdoc",
     type: "entry",
@@ -362,7 +364,7 @@ const sideNavItems = [
     hint: "Служебные записки",
     children: [
       {
-        item: "Все документы",
+        caption: "Все документы",
         id: "linkeid-360300362",
         tid: "eid-360300362",
         type: "entry",
@@ -370,7 +372,7 @@ const sideNavItems = [
         hint: "Все документы"
       },
       {
-        item: "По получателям",
+        caption: "По получателям",
         id: "linkeid-1238254817",
         tid: "eid-1238254817",
         type: "entry",
@@ -378,7 +380,7 @@ const sideNavItems = [
         hint: "По получателям"
       },
       {
-        item: "По отправителям",
+        caption: "По отправителям",
         id: "linkeid-413908911",
         tid: "eid-413908911",
         type: "entry",
@@ -386,7 +388,7 @@ const sideNavItems = [
         hint: "По отправителям"
       },
       {
-        item: "Просроченные документы",
+        caption: "Просроченные документы",
         id: "linkeid-1118336227",
         tid: "eid-1118336227",
         type: "entry",
@@ -396,7 +398,7 @@ const sideNavItems = [
     ]
   },
   {
-    item: "Протоколы",
+    caption: "Протоколы",
     id: "entryprotocol",
     tid: "protocol",
     type: "entry",
@@ -404,7 +406,7 @@ const sideNavItems = [
     hint: "Протоколы",
     children: [
       {
-        item: "Все документы",
+        caption: "Все документы",
         id: "subentryeid-55636446",
         tid: "eid-55636446",
         type: "subentry",
@@ -412,7 +414,7 @@ const sideNavItems = [
         hint: "Все документы",
         children: [
           {
-            item: "По исполнителям",
+            caption: "По исполнителям",
             id: "linkeid-179251390",
             tid: "eid-179251390",
             type: "entry",
@@ -420,7 +422,7 @@ const sideNavItems = [
             hint: "По исполнителям"
           },
           {
-            item: "Уполномоченный орган",
+            caption: "Уполномоченный орган",
             id: "linkeid-784448894",
             tid: "eid-784448894",
             type: "entry",
@@ -428,7 +430,7 @@ const sideNavItems = [
             hint: "Уполномоченный орган"
           },
           {
-            item: "По автору",
+            caption: "По автору",
             id: "linkeid-510724595",
             tid: "eid-510724595",
             type: "entry",
@@ -436,7 +438,7 @@ const sideNavItems = [
             hint: "По автору"
           },
           {
-            item: "По дате протокола",
+            caption: "По дате протокола",
             id: "linkeid-2050087669",
             tid: "eid-2050087669",
             type: "entry",
@@ -448,7 +450,7 @@ const sideNavItems = [
     ]
   },
   {
-    item: "Проекты документов",
+    caption: "Проекты документов",
     id: "entryworkdocs",
     tid: "workdocs",
     type: "entry",
@@ -456,7 +458,7 @@ const sideNavItems = [
     hint: "Проекты документов",
     children: [
       {
-        item: "Служебные записки",
+        caption: "Служебные записки",
         id: "subentryproject_workdocs",
         tid: "project_workdocs",
         type: "subentry",
@@ -464,7 +466,7 @@ const sideNavItems = [
         hint: "Служебные записки",
         children: [
           {
-            item: "Просроченные",
+            caption: "Просроченные",
             id: "linkeid-1588243576",
             tid: "eid-1588243576",
             type: "entry",
@@ -472,7 +474,7 @@ const sideNavItems = [
             hint: "Просроченные"
           },
           {
-            item: "Все служебные записки",
+            caption: "Все служебные записки",
             id: "linkeid-290377568",
             tid: "eid-290377568",
             type: "entry",
@@ -480,7 +482,7 @@ const sideNavItems = [
             hint: "Все служебные записки"
           },
           {
-            item: "По папкам",
+            caption: "По папкам",
             id: "linkeid-669063423",
             tid: "eid-669063423",
             type: "entry",
@@ -488,7 +490,7 @@ const sideNavItems = [
             hint: "По папкам"
           },
           {
-            item: "По дате регистрации",
+            caption: "По дате регистрации",
             id: "linkeid-155528632",
             tid: "eid-155528632",
             type: "entry",
@@ -496,7 +498,7 @@ const sideNavItems = [
             hint: "По дате регистрации"
           },
           {
-            item: "По департаментам",
+            caption: "По департаментам",
             id: "linkeid-1354002316",
             tid: "eid-1354002316",
             type: "entry",
@@ -504,7 +506,7 @@ const sideNavItems = [
             hint: "По департаментам"
           },
           {
-            item: "По отправителям",
+            caption: "По отправителям",
             id: "linkeid-204344665",
             tid: "eid-204344665",
             type: "entry",
@@ -512,7 +514,7 @@ const sideNavItems = [
             hint: "По отправителям"
           },
           {
-            item: "По получателям",
+            caption: "По получателям",
             id: "linkeid-1651827864",
             tid: "eid-1651827864",
             type: "entry",
@@ -520,7 +522,7 @@ const sideNavItems = [
             hint: "По получателям"
           },
           {
-            item: "По номенклатуре дел",
+            caption: "По номенклатуре дел",
             id: "linkeid-780947801",
             tid: "eid-780947801",
             type: "entry",
@@ -530,7 +532,7 @@ const sideNavItems = [
         ]
       },
       {
-        item: "Договоры",
+        caption: "Договоры",
         id: "subentryproject_contracts",
         tid: "project_contracts",
         type: "subentry",
@@ -538,7 +540,7 @@ const sideNavItems = [
         hint: "Договоры",
         children: [
           {
-            item: "Все договоры",
+            caption: "Все договоры",
             id: "linkeid-2049413841",
             tid: "eid-2049413841",
             type: "entry",
@@ -546,7 +548,7 @@ const sideNavItems = [
             hint: "Все договоры"
           },
           {
-            item: "По дате исполнителя",
+            caption: "По дате исполнителя",
             id: "linkeid-1849927116",
             tid: "eid-1849927116",
             type: "entry",
@@ -554,7 +556,7 @@ const sideNavItems = [
             hint: "По дате исполнителя"
           },
           {
-            item: "По контрагенту",
+            caption: "По контрагенту",
             id: "linkeid-241337641",
             tid: "eid-241337641",
             type: "entry",
@@ -564,7 +566,7 @@ const sideNavItems = [
         ]
       },
       {
-        item: "Доп.соглашения",
+        caption: "Доп.соглашения",
         id: "subentryproject_agreements",
         tid: "project_agreements",
         type: "subentry",
@@ -572,7 +574,7 @@ const sideNavItems = [
         hint: "Доп.соглашения",
         children: [
           {
-            item: "Все соглашения",
+            caption: "Все соглашения",
             id: "linkeid-1563092122",
             tid: "eid-1563092122",
             type: "entry",
@@ -580,7 +582,7 @@ const sideNavItems = [
             hint: "Все соглашения"
           },
           {
-            item: "По дате регистрации",
+            caption: "По дате регистрации",
             id: "linkeid-577270795",
             tid: "eid-577270795",
             type: "entry",
@@ -588,7 +590,7 @@ const sideNavItems = [
             hint: "По дате регистрации"
           },
           {
-            item: "По исполнителям",
+            caption: "По исполнителям",
             id: "linkeid-1929483620",
             tid: "eid-1929483620",
             type: "entry",
@@ -598,7 +600,7 @@ const sideNavItems = [
         ]
       },
       {
-        item: "Приказы",
+        caption: "Приказы",
         id: "subentryproject_orders",
         tid: "project_orders",
         type: "subentry",
@@ -606,7 +608,7 @@ const sideNavItems = [
         hint: "Приказы",
         children: [
           {
-            item: "Все приказы",
+            caption: "Все приказы",
             id: "linkeid-651962611",
             tid: "eid-651962611",
             type: "entry",
@@ -614,7 +616,7 @@ const sideNavItems = [
             hint: "Все приказы"
           },
           {
-            item: "По дате регистрации",
+            caption: "По дате регистрации",
             id: "linkeid-349163025",
             tid: "eid-349163025",
             type: "entry",
@@ -622,7 +624,7 @@ const sideNavItems = [
             hint: "По дате регистрации"
           },
           {
-            item: "По типу",
+            caption: "По типу",
             id: "linkeid-1646057155",
             tid: "eid-1646057155",
             type: "entry",
@@ -630,7 +632,7 @@ const sideNavItems = [
             hint: "По типу"
           },
           {
-            item: "По департаментам",
+            caption: "По департаментам",
             id: "linkeid-122390957",
             tid: "eid-122390957",
             type: "entry",
@@ -640,7 +642,7 @@ const sideNavItems = [
         ]
       },
       {
-        item: "Исходящие",
+        caption: "Исходящие",
         id: "subentryproject_outgoing",
         tid: "project_outgoing",
         type: "subentry",
@@ -648,7 +650,7 @@ const sideNavItems = [
         hint: "Исходящие",
         children: [
           {
-            item: "Все исходящие",
+            caption: "Все исходящие",
             id: "linkeid-1085739279",
             tid: "eid-1085739279",
             type: "entry",
@@ -656,7 +658,7 @@ const sideNavItems = [
             hint: "Все исходящие"
           },
           {
-            item: "По папкам",
+            caption: "По папкам",
             id: "linkeid-24038346",
             tid: "eid-24038346",
             type: "entry",
@@ -664,7 +666,7 @@ const sideNavItems = [
             hint: "По папкам"
           },
           {
-            item: "Ответные",
+            caption: "Ответные",
             id: "linkeid-564785239",
             tid: "eid-564785239",
             type: "entry",
@@ -672,7 +674,7 @@ const sideNavItems = [
             hint: "Ответные"
           },
           {
-            item: "По дате регистрации",
+            caption: "По дате регистрации",
             id: "linkeid-243097362",
             tid: "eid-243097362",
             type: "entry",
@@ -680,7 +682,7 @@ const sideNavItems = [
             hint: "По дате регистрации"
           },
           {
-            item: "По департаментам",
+            caption: "По департаментам",
             id: "linkeid-1779263345",
             tid: "eid-1779263345",
             type: "entry",
@@ -688,7 +690,7 @@ const sideNavItems = [
             hint: "По департаментам"
           },
           {
-            item: "По исполнителям",
+            caption: "По исполнителям",
             id: "linkeid-311783497",
             tid: "eid-311783497",
             type: "entry",
@@ -696,7 +698,7 @@ const sideNavItems = [
             hint: "По исполнителям"
           },
           {
-            item: "По получателям",
+            caption: "По получателям",
             id: "linkeid-1641813269",
             tid: "eid-1641813269",
             type: "entry",
@@ -706,7 +708,7 @@ const sideNavItems = [
         ]
       },
       {
-        item: "Протоколы",
+        caption: "Протоколы",
         id: "subentryproject_protocol",
         tid: "project_protocol",
         type: "subentry",
@@ -714,7 +716,7 @@ const sideNavItems = [
         hint: "Протоколы",
         children: [
           {
-            item: "Протоколы",
+            caption: "Протоколы",
             id: "linkeid-1279966705",
             tid: "eid-1279966705",
             type: "entry",
@@ -722,7 +724,7 @@ const sideNavItems = [
             hint: "Протоколы"
           },
           {
-            item: "Протоколы по дате регистрации",
+            caption: "Протоколы по дате регистрации",
             id: "linkeid-1742849853",
             tid: "eid-1742849853",
             type: "entry",
@@ -735,30 +737,51 @@ const sideNavItems = [
   }
 ];
 
-const authSession = {
-  orgName: "MT",
-  title: "Title",
-  logo: "/dist/logo.png",
-  theme: "cinzento",
-  langs: [],
+const authSession: IApplicationState = {
+  ui: {
+    orgName: "MunaiTelecom",
+    title: "Title",
+    logo: "/static/logo.png",
+    theme: "cinzento",
+    langs: [],
+    sidenav: {
+      gamburger: true,
+      open: true,
+      items: sideNavItems
+    }
+  },
   user: {
     isAuthenticated: true,
     name: "medin",
     theme: "cinzento",
     displayMailLink: true,
     token: "",
-    mailLink: ""
-  },
-  sidenav: sideNavItems
+    mailFilePath: "http://sed.mtcom.kz/mail/%D0%B0%D0%B4%D0%BC%D0%B8.nsf",
+    mailLink: "/XSmart/mail"
+  }
 };
 
-const unAuthsession: any = {
-  orgName: "MT",
-  title: "Title",
-  logo: "/dist/logo.png",
-  theme: "cinzento",
+const unAuthsession: IApplicationState = {
+  ui: {
+    orgName: "MunaiTelecom",
+    title: "Title",
+    logo: "/static/logo.png",
+    theme: "cinzento",
+    langs: [],
+    sidenav: {
+      gamburger: true,
+      open: true,
+      items: sideNavItems
+    }
+  },
   user: {
-    isAuthenticated: false
+    isAuthenticated: false,
+    name: "",
+    theme: "",
+    displayMailLink: false,
+    token: "",
+    mailFilePath: "",
+    mailLink: ""
   }
 };
 

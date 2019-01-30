@@ -16,3 +16,7 @@ code {
 .list .list__item_content {
   text-align: left;
 }
+
+h5.sidenav__nav_title {
+  padding: 0 0 0 26px;
+}

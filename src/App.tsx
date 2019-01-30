@@ -1,16 +1,19 @@
 import React from "react";
+import { Provider } from "react-redux";
 
-import AppService from "./services/app.service";
 import AppRouter from "./router/Router";
+import configureStore from "./store/configureStore";
 
 import "./nb.min.css";
 import "./components/styles/Nav.css";
 
 class App extends React.Component {
-  appService: AppService = new AppService();
-
   render() {
-    return <AppRouter appService={this.appService} />;
+    return (
+      <Provider store={configureStore({})}>
+        <AppRouter />
+      </Provider>
+    );
   }
 }
 

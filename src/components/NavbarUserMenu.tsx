@@ -1,16 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { RouteComponentProps, Link, match } from "react-router-dom";
 
 import { IUserState } from "../interfaces";
 
-interface UserMenuProps {
+interface UserMenuProps extends RouteComponentProps {
+  match: match<any>;
   user: IUserState;
   onLogout: () => void;
 }
 
-class NavbarUserMenu extends React.Component<UserMenuProps, any> {
+class NavbarUserMenu extends React.Component<UserMenuProps> {
   render() {
-    const { displayMailLink, mailLink, name } = this.props.user;
+    const {
+      user: { displayMailLink, mailLink, name },
+      onLogout
+    } = this.props;
 
     return (
       <nav className="navbar-nav">
@@ -22,7 +26,7 @@ class NavbarUserMenu extends React.Component<UserMenuProps, any> {
               target="_blank"
               rel="noopener noreferrer"
             >
-              post
+              <i className="fa fa-inbox" />
             </a>
           </div>
         )}
@@ -36,7 +40,10 @@ class NavbarUserMenu extends React.Component<UserMenuProps, any> {
           <div className="dropdown-menu">
             <ul className="list user-menu-list">
               <li>
-                <Link to="/profile" className="list__item user-profile">
+                <Link
+                  to={{ pathname: `/ws/profile` }}
+                  className="list__item user-profile"
+                >
                   <i className="list__item_icon fa fa-user-circle-o" />
                   <div className="list__item_content">
                     your_profile
@@ -49,7 +56,7 @@ class NavbarUserMenu extends React.Component<UserMenuProps, any> {
                 <button
                   type="button"
                   className="list__item w-100"
-                  onClick={this.props.onLogout}
+                  onClick={onLogout}
                 >
                   <i className="list__item_icon fa fa-sign-out" />
                   <div className="list__item_content">logout</div>

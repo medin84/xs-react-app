@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { INavEntry } from "../interfaces";
 
 interface NavProps {
+  path: string;
   items: INavEntry[];
 }
 
@@ -30,19 +31,17 @@ class Nav extends React.Component<NavProps, NavState> {
     );
   }
 
-  toggleCollapsible(e: any, item: INavEntry): any {
+  toggleCollapsible(e: any, item: INavEntry) {
     e.preventDefault();
     item.expanded = !item.expanded;
-    this.setState({
-      toggle: item.expanded
-    });
+    this.setState({ toggle: item.expanded });
   }
 
   renderNavLink(item: INavEntry) {
     return (
       <NavLink
         exact
-        to={{ pathname: "/views", search: `v=${item.url}` }}
+        to={{ pathname: `${this.props.path}/views`, search: `v=${item.url}` }}
         className="nav-link"
         activeClassName="-active"
       >
@@ -78,7 +77,7 @@ class Nav extends React.Component<NavProps, NavState> {
           <li key={item.id} className={this.itemClass(item)}>
             {item.url ? this.renderNavLink(item) : this.renderNavHeader(item)}
             {item.children && item.children.length > 0 && (
-              <Nav items={item.children} />
+              <Nav path={this.props.path} items={item.children} />
             )}
           </li>
         ))}

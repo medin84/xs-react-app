@@ -5,6 +5,12 @@ import "./styles/Login.css";
 interface LoginProps {
   title: string;
   logo: string;
+  i18n: {
+    user: string;
+    password: string;
+    remember: string;
+    btnLogin: string;
+  };
   onSubmit: (state: LoginState) => void;
 }
 
@@ -40,14 +46,14 @@ class Login extends React.Component<LoginProps, LoginState> {
   }
 
   render() {
-    const { title, logo } = this.props;
+    const { title, logo, i18n } = this.props;
 
     return (
       <div className="sign-in-page-container">
         <h2 className="sign-in-page-title">{title}</h2>
         <form className="sign-in-form" onSubmit={this.onSubmit}>
           <div className="sign-in-form-row">
-            <div className="sign-in-form-row__label">Пользователь</div>
+            <div className="sign-in-form-row__label">{i18n.user}</div>
             <div className="sign-in-form-row__field">
               <input
                 name="login"
@@ -57,7 +63,7 @@ class Login extends React.Component<LoginProps, LoginState> {
             </div>
           </div>
           <div className="sign-in-form-row">
-            <div className="sign-in-form-row__label">Пароль</div>
+            <div className="sign-in-form-row__label">{i18n.password}</div>
             <div className="sign-in-form-row__field">
               <input
                 type="password"
@@ -76,32 +82,16 @@ class Login extends React.Component<LoginProps, LoginState> {
                 value="1"
                 onChange={this.onInputChange}
               />
-              <span>запомнить</span>
+              <span>{i18n.remember}</span>
             </label>
             <button type="submit" className="btn sign-in-btn-submit">
-              Войти
+              {i18n.btnLogin}
             </button>
           </div>
           <div className="sign-in-client-logo-wrapper">
             <img className="sign-in-client-logo" src={logo} alt="logo" />
           </div>
         </form>
-        <div className="copy hidden">
-          <a
-            href=""
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            LOF
-          </a>
-        </div>
-        <div className="xsmart-logo">
-          <a
-            href=""
-            target="_blank"
-            rel="noopener noreferrer"
-          />
-        </div>
       </div>
     );
   }

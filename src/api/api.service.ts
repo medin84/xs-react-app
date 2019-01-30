@@ -1,10 +1,11 @@
 import mockData from "./mockData";
-import { IApplicationState } from "../interfaces/IApplicationState";
+import { IApplicationState } from "../interfaces";
+import { LoginState } from "../components/Login";
 
 const context = "XSmart"; // window.location.pathname.split("/")[1];
 
-const fetchSession = (): Promise<IApplicationState> => {
-  return fetch(`/${context}/session`)
+const fetchSession = async (): Promise<IApplicationState> => {
+  return await fetch(`/${context}/session`)
     .then(response => {
       return response.json ? response.json() : Object.create({});
     })
@@ -27,6 +28,7 @@ const fetchSession = (): Promise<IApplicationState> => {
           name: resp.user ? resp.user.name : "",
           token: resp.user ? resp.user.token : "",
           displayMailLink: resp.user ? resp.user.displayMailLink : false,
+          mailFilePath: resp.user ? resp.user.mailFilePath : "",
           mailLink: resp.user ? resp.user.mailLink : "",
           theme: resp.user ? resp.user.theme : ""
         }
@@ -34,15 +36,15 @@ const fetchSession = (): Promise<IApplicationState> => {
     });
 };
 
-const login = (login: string, pwd: string, saveauth: boolean) => {
-  const params: any = { login, pwd, saveauth };
+const login = async (login: LoginState) => {
+  const params: any = { ...login };
   const searchParams = Object.keys(params)
     .map(key => {
       return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
     })
     .join("&");
 
-  return fetch(`/${context}/Login`, {
+  return await fetch(`/${context}/Login`, {
     credentials: "include",
     method: "POST",
     headers: {
@@ -52,27 +54,26 @@ const login = (login: string, pwd: string, saveauth: boolean) => {
   }).then(response => response.json());
 };
 
-const logout = () => {
-  return fetch(`/${context}/Logout`, {
+const logout = async () => {
+  return await fetch(`/${context}/Logout`, {
     credentials: "include",
     method: "POST"
   });
 };
 
-const _session = () => {
-  return Promise.resolve(mockData.authSession).then(response => {
-    return response;
-  });
+const _fetchSession = async (): Promise<IApplicationState> => {
+  return await Promise.resolve(mockData.unAuthsession);
 };
 
-const _login = (login: string, pwd: string, saveauth: boolean) => {
-  return Promise.resolve(mockData.authSession).then(response => {
-    return response;
-  });
+const _login = async (login: LoginState) => {
+  if (login.login == "developer") {
+    return await Promise.resolve(mockData.authSession);
+  }
+  return await Promise.reject(mockData.unAuthsession);
 };
 
-const _logout = () => {
-  return Promise.resolve(mockData.unAuthsession).then(response => {
+const _logout = async () => {
+  return await Promise.resolve(mockData.unAuthsession).then(response => {
     return response;
   });
 };

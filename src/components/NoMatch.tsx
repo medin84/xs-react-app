@@ -2,11 +2,7 @@ import React from "react";
 
 interface NoMatchProps {}
 
-interface NoMatchState {}
-
-class NoMatch extends React.Component<NoMatchProps, NoMatchState> {
-  onSubmit() {}
-
+class NoMatch extends React.Component<NoMatchProps> {
   render() {
     return (
       <h3>
