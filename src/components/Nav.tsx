@@ -41,7 +41,7 @@ class Nav extends React.Component<NavProps, NavState> {
     return (
       <NavLink
         exact
-        to={{ pathname: `${this.props.path}/views`, search: `v=${item.url}` }}
+        to={{ pathname: `${this.props.path}/views`, search: `${item.url}` }}
         className="nav-link"
         activeClassName="-active"
       >

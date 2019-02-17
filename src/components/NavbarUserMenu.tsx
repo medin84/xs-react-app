@@ -1,6 +1,7 @@
 import React from "react";
 import { RouteComponentProps, Link, match } from "react-router-dom";
 
+import { URL_PROFILE } from "../constants/UrlConstants";
 import { IUserState } from "../interfaces";
 
 interface UserMenuProps extends RouteComponentProps {
@@ -41,7 +42,7 @@ class NavbarUserMenu extends React.Component<UserMenuProps> {
             <ul className="list user-menu-list">
               <li>
                 <Link
-                  to={{ pathname: `/ws/profile` }}
+                  to={{ pathname: URL_PROFILE }}
                   className="list__item user-profile"
                 >
                   <i className="list__item_icon fa fa-user-circle-o" />

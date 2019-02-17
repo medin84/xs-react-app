@@ -1,14 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Dispatch, bindActionCreators } from "redux";
-import { Route, RouteComponentProps } from "react-router-dom";
-
-import { IApplicationState } from "../interfaces";
-import { logout } from "../actions/user.actions";
+import { match, Route, RouteComponentProps, Switch } from "react-router-dom";
+import { bindActionCreators, Dispatch } from "redux";
 import { toggleSidenav } from "../actions/ui.actions";
+import { logout } from "../actions/user.actions";
 import Navbar from "../components/Navbar";
+import NoMatch from "../components/NoMatch";
 import Sidenav from "../components/Sidenav";
-import View from "../components/View";
+import DocumentContainer from "../containers/DocumentContainer";
+import ViewContainer from "../containers/ViewContainer";
+import { IApplicationState } from "../interfaces";
 
 interface ModulePageRouteParams {
   moduleId: string;
@@ -17,6 +18,7 @@ interface ModulePageRouteParams {
 interface ModuleProps
   extends IApplicationState,
     RouteComponentProps<ModulePageRouteParams> {
+  match: match<any>;
   onLogout: (history: any) => void;
   onSidenavToggle: () => void;
 }
@@ -33,10 +35,9 @@ class ModulePage extends React.Component<ModuleProps> {
   }
 
   render() {
-    const { ui, history, match, onLogout } = this.props;
-    const navEntry = ui.sidenav.items.filter(
-      it => it.id === match.params.moduleId
-    );
+    const { ui, history, match, onLogout } = this.props,
+      moduleId = match.params.moduleId,
+      navEntry = ui.sidenav.items.filter(it => it.id === moduleId);
 
     return (
       <div className={this.getLayoutClassNames()}>
@@ -52,7 +53,17 @@ class ModulePage extends React.Component<ModuleProps> {
               <Sidenav path={match.url} navItems={navEntry} />
               <main className="content">
                 <div className="content__container">
-                  <Route path={`${match.url}/views`} component={View} />
+                  <Switch>
+                    <Route
+                      path="/bd/:moduleId/documents"
+                      component={DocumentContainer}
+                    />
+                    <Route
+                      path="/bd/:moduleId/views"
+                      component={ViewContainer}
+                    />
+                    <Route component={NoMatch} />
+                  </Switch>
                 </div>
               </main>
             </div>

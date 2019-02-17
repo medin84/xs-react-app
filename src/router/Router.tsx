@@ -8,29 +8,59 @@ import {
 import { connect } from "react-redux";
 import { Dispatch, bindActionCreators } from "redux";
 
+import { URL_WS, URL_LOGIN, URL_MODULE } from "../constants/UrlConstants";
 import { fetchSession } from "../actions/user.actions";
 import { IApplicationState } from "../interfaces";
+import { PrivateRoute } from "./PrivateRoute";
 import WorkspacePage from "../pages/WorkspacePage";
 import ModulePage from "../pages/ModulePage";
 import LoginPage from "../pages/LoginPage";
 import NoMatch from "../components/NoMatch";
 
-interface AppRouterProps {
+interface AppRouterProps extends IApplicationState {
   fetchSession: () => void;
 }
 
-class AppRouter extends React.Component<AppRouterProps> {
-  componentDidMount() {
-    this.props.fetchSession();
+interface AppRouterState {
+  loading: boolean;
+}
+
+class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
+  state = {
+    loading: true
+  };
+
+  async componentDidMount() {
+    await this.props.fetchSession();
+    this.setState({
+      loading: false
+    });
   }
 
   render() {
+    if (this.state.loading) {
+      return <div>loading...</div>;
+    }
+
+    const { user } = this.props;
+
     return (
       <Router>
         <Switch>
-          <Route path="/login" component={LoginPage} />
-          <Route path="/ws" component={WorkspacePage} />
-          <Route path="/bd/:moduleId" component={ModulePage} />
+          <Route exact path="/" render={() => <Redirect to={URL_WS} />} />
+          <Route exact path={URL_LOGIN} component={LoginPage} />
+          <PrivateRoute
+            authenticated={user.isAuthenticated}
+            redirectTo={URL_LOGIN}
+            path={URL_WS}
+            component={WorkspacePage}
+          />
+          <PrivateRoute
+            authenticated={user.isAuthenticated}
+            redirectTo={URL_LOGIN}
+            path={URL_MODULE}
+            component={ModulePage}
+          />
           <Route component={NoMatch} />
         </Switch>
       </Router>

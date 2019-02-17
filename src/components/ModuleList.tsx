@@ -22,17 +22,18 @@ class ModuleList extends React.Component<ModuleListProps> {
             <li className={itemClassName} key={module.id}>
               <NavLink
                 to={{ pathname: `/bd/${module.id}` }}
+                activeClassName="-active"
                 className="module-link ws-app-link"
               >
                 <span className="module-logo-wrap ws-app-logo">
-                  <img
+                  {/* <img
                     className="module-logo"
                     src={module.caption}
                     alt={module.caption}
-                  />
+                  /> */}
                 </span>
                 <span className="module-type ws-app-type">
-                  {module.caption}
+                  {/* {module.caption} */}
                 </span>
                 <span className="module-name ws-app-name">
                   {module.caption}

@@ -20,3 +20,13 @@ code {
 h5.sidenav__nav_title {
   padding: 0 0 0 26px;
 }
+
+.form__container {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.form-group {
+  margin: 0 !important;
+  min-height: 0 !important;
+}

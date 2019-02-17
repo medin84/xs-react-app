@@ -2,7 +2,7 @@ import mockData from "./mockData";
 import { IApplicationState } from "../interfaces";
 import { LoginState } from "../components/Login";
 
-const context = "XSmart"; // window.location.pathname.split("/")[1];
+const context = window.location.pathname.split("/")[1];
 
 const fetchSession = async (): Promise<IApplicationState> => {
   return await fetch(`/${context}/session`)
@@ -20,7 +20,7 @@ const fetchSession = async (): Promise<IApplicationState> => {
           sidenav: {
             gamburger: true,
             open: true,
-            items: resp.sidenav ? resp.sidenav.items : []
+            items: mockData.authSession.ui.sidenav.items // resp.sidenav ? resp.sidenav.items : []
           }
         },
         user: {
@@ -62,7 +62,7 @@ const logout = async () => {
 };
 
 const _fetchSession = async (): Promise<IApplicationState> => {
-  return await Promise.resolve(mockData.unAuthsession);
+  return await Promise.resolve(mockData.authSession);
 };
 
 const _login = async (login: LoginState) => {
@@ -78,8 +78,41 @@ const _logout = async () => {
   });
 };
 
+const getViewEntries = async (query: string) => {
+  return await fetch(`/${context}/api/view${query}`, {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8"
+    }
+  }).then(response => response.json());
+};
+
+const getDocuments = async (query: string) => {
+  return await fetch(`/${context}/api/documents${query}`, {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8"
+    }
+  }).then(response => response.json());
+};
+
+const getDocument = async (query: string) => {
+  return await fetch(`/${context}/api/document${query}`, {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8"
+    }
+  }).then(response => response.json());
+};
+
 export const apiService = {
   fetchSession: fetchSession,
   login: login,
-  logout: logout
+  logout: logout,
+  getViewEntries,
+  getDocuments,
+  getDocument
 };

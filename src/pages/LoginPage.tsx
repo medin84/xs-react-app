@@ -14,6 +14,13 @@ interface LoginPageProps extends RouteComponentProps {
 }
 
 class LoginPage extends React.Component<LoginPageProps> {
+  i18n = {
+    user: "User",
+    password: "Password",
+    remember: "Remember",
+    btnLogin: "Login"
+  };
+
   render() {
     const { title, logo, history, onSubmitLoginForm } = this.props;
 
@@ -21,6 +28,7 @@ class LoginPage extends React.Component<LoginPageProps> {
       <Login
         title={title}
         logo={logo}
+        i18n={this.i18n}
         onSubmit={(credentials: LoginState) => {
           onSubmitLoginForm(history, credentials);
         }}

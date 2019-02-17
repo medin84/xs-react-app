@@ -1,15 +1,22 @@
 import React from "react";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-interface NoMatchProps {}
-
-class NoMatch extends React.Component<NoMatchProps> {
+class NoMatch extends React.Component<RouteComponentProps> {
   render() {
+    console.log("NoMatch", this.props);
+    const {
+      location: { pathname, search }
+    } = this.props;
     return (
       <h3>
-        No match for <code>{location.pathname}</code>
+        No match for{" "}
+        <code>
+          {pathname}
+          {search}
+        </code>
       </h3>
     );
   }
 }
 
-export default NoMatch;
+export default withRouter(NoMatch);

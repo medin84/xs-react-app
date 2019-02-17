@@ -4,7 +4,8 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 class View extends React.Component<RouteComponentProps> {
   state = {
     query: "",
-    html: ""
+    html: "",
+    json: []
   };
 
   ref: any;
@@ -42,22 +43,47 @@ class View extends React.Component<RouteComponentProps> {
 
     const params = new URLSearchParams(location.search);
     const context = window.location.pathname.split("/")[1];
-    fetch(`/XSmart/xpage/jsp/${params.get("v")}`).then(response => {
-      response
-        .text()
-        .then(r => {
-          if (!this.mounted) {
-            return;
-          }
-          this.setState({
-            html: r
-          });
-        })
-        .then(() => {
-          this.initListener();
+    const db = params.get("database");
+    const view = params.get("view");
+
+    fetch(`/XSmart/api/view${location.search}`).then(response => {
+      response.json().then(r => {
+        if (!this.mounted) {
+          return;
+        }
+        console.log(r);
+        this.setState({
+          json: r
         });
+      });
     });
   }
+
+  // fetchView(location: any) {
+  //   if (!this.mounted) {
+  //     return;
+  //   }
+
+  //   console.log(this.props);
+
+  //   const params = new URLSearchParams(location.search);
+  //   const context = window.location.pathname.split("/")[1];
+  //   fetch(`/XSmart/xpage/jsp/${params.get("v")}`).then(response => {
+  //     response
+  //       .text()
+  //       .then(r => {
+  //         if (!this.mounted) {
+  //           return;
+  //         }
+  //         this.setState({
+  //           html: r
+  //         });
+  //       })
+  //       .then(() => {
+  //         this.initListener();
+  //       });
+  //   });
+  // }
 
   longestSubseq(s1: string, s2: string, res: string): string {
     let result: string[] = [];
@@ -194,6 +220,9 @@ class View extends React.Component<RouteComponentProps> {
               </div>
             );
           })} */}
+          {(this.state.json || []).map((item: any) => (
+            <div>{item.ViewTextRus}</div>
+          ))}
         </div>
       </div>
     );

@@ -34,6 +34,13 @@ class WorkspacePage extends React.Component<WorkspaceProps> {
         <div className="layout__container">
           <Navbar
             {...this.props}
+            ui={{
+              ...this.props.ui,
+              sidenav: {
+                ...this.props.ui.sidenav,
+                gamburger: false
+              }
+            }}
             onLogout={() => {
               onLogout(history);
             }}

@@ -1,5 +1,6 @@
 import { Dispatch } from "redux";
 
+import { URL_LOGIN, URL_WS } from "../constants/UrlConstants";
 import { IApplicationState } from "../interfaces";
 import { setUIState } from "./ui.actions";
 import { apiService } from "../api/api.service";
@@ -58,11 +59,11 @@ export const login = (history: any, loginState: LoginState) => async (
 
   dispatch(loginSuccess(response));
   dispatch(setUIState(response.ui));
-  history.push("/ws");
+  history.push(URL_WS);
 };
 
 export const logout = (history: any) => async (dispatch: Dispatch) => {
   const response = await apiService.logout();
-  history.push("/login");
+  history.push(URL_LOGIN);
   dispatch({ type: LOGOUT });
 };
