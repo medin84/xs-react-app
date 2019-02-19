@@ -35,7 +35,7 @@ class ViewContainer extends React.Component<ModulePageRouteProps, any> {
       return;
     }
 
-    const params = new URLSearchParams(location.search);
+    // const params = new URLSearchParams(location.search);
     apiService.getViewEntries(location.search).then(response => {
       if (!this.mounted) {
         return;
@@ -45,15 +45,6 @@ class ViewContainer extends React.Component<ModulePageRouteProps, any> {
         json: response
       });
     });
-  }
-
-  getDb(item: any) {
-    // /SmartDoc_MunaiTelecom/SmartDoc/incoming.nsf/api/data/documents/unid/52ECB8FD976350024625832000356C8D
-    if (!item["@link"]) {
-      return "";
-    }
-    const dbName = item["@link"].href.split("/api/data/documents/unid/")[0];
-    return dbName;
   }
 
   render() {

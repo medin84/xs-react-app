@@ -2,6 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { match, Route, RouteComponentProps, Switch } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
+
+import { IApplicationState } from "../interfaces";
+import { URL_DOCUMENTS, URL_VIEWS } from "../constants/UrlConstants";
 import { toggleSidenav } from "../actions/ui.actions";
 import { logout } from "../actions/user.actions";
 import Navbar from "../components/Navbar";
@@ -9,7 +12,6 @@ import NoMatch from "../components/NoMatch";
 import Sidenav from "../components/Sidenav";
 import DocumentContainer from "../containers/DocumentContainer";
 import ViewContainer from "../containers/ViewContainer";
-import { IApplicationState } from "../interfaces";
 
 interface ModulePageRouteParams {
   moduleId: string;
@@ -54,14 +56,8 @@ class ModulePage extends React.Component<ModuleProps> {
               <main className="content">
                 <div className="content__container">
                   <Switch>
-                    <Route
-                      path="/bd/:moduleId/documents"
-                      component={DocumentContainer}
-                    />
-                    <Route
-                      path="/bd/:moduleId/views"
-                      component={ViewContainer}
-                    />
+                    <Route path={URL_DOCUMENTS} component={DocumentContainer} />
+                    <Route path={URL_VIEWS} component={ViewContainer} />
                     <Route component={NoMatch} />
                   </Switch>
                 </div>

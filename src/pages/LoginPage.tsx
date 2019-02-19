@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { Dispatch, bindActionCreators } from "redux";
 import { RouteComponentProps } from "react-router-dom";
 
-import { login } from "../actions/user.actions";
 import { IApplicationState } from "../interfaces";
+import { login } from "../actions/user.actions";
 import Login, { LoginState } from "../components/Login";
 
 interface LoginPageProps extends RouteComponentProps {

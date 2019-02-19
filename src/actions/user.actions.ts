@@ -57,13 +57,14 @@ export const login = (history: any, loginState: LoginState) => async (
     return;
   }
 
-  dispatch(loginSuccess(response));
-  dispatch(setUIState(response.ui));
+  // dispatch(loginSuccess(response));
+  // dispatch(setUIState(response.ui));
+  await fetchSession()(dispatch);
   history.push(URL_WS);
 };
 
 export const logout = (history: any) => async (dispatch: Dispatch) => {
-  const response = await apiService.logout();
+  await apiService.logout();
   history.push(URL_LOGIN);
   dispatch({ type: LOGOUT });
 };

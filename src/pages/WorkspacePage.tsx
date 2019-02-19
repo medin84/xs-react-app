@@ -4,6 +4,7 @@ import { Dispatch, bindActionCreators } from "redux";
 import { Route, RouteComponentProps } from "react-router-dom";
 
 import { IApplicationState } from "../interfaces";
+import { URL_WS, URL_PROFILE } from "../constants/UrlConstants";
 import { logout } from "../actions/user.actions";
 import { toggleSidenav } from "../actions/ui.actions";
 import Navbar from "../components/Navbar";
@@ -50,8 +51,8 @@ class WorkspacePage extends React.Component<WorkspaceProps> {
               <main className="content">
                 <div className="content__container">
                   <Route
-                    path={`${match.url}/`}
                     exact
+                    path={URL_WS}
                     render={() => {
                       return (
                         <div className="py-5">
@@ -63,11 +64,7 @@ class WorkspacePage extends React.Component<WorkspaceProps> {
                       );
                     }}
                   />
-                  <Route
-                    path={`${match.url}/profile`}
-                    exact
-                    component={UserProfile}
-                  />
+                  <Route path={URL_PROFILE} exact component={UserProfile} />
                 </div>
               </main>
             </div>

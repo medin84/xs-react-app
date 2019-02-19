@@ -2,7 +2,12 @@ import mockData from "./mockData";
 import { IApplicationState } from "../interfaces";
 import { LoginState } from "../components/Login";
 
-const context = window.location.pathname.split("/")[1];
+import InFormSchema from "./In";
+import KrFormSchema from "./Kr";
+import kiFormSchema from "./KI";
+import DefaultFormSchema from "./DefaultFormSchema";
+
+const context = "XSmart"; // window.location.pathname.split("/")[1];
 
 const fetchSession = async (): Promise<IApplicationState> => {
   return await fetch(`/${context}/session`)
@@ -108,11 +113,25 @@ const getDocument = async (query: string) => {
   }).then(response => response.json());
 };
 
+const getFormSchema = (formName: string) => {
+  switch (formName) {
+    case "IN":
+      return InFormSchema;
+    case "KR":
+      return KrFormSchema;
+    case "KI":
+      return kiFormSchema;
+    default:
+      return DefaultFormSchema;
+  }
+};
+
 export const apiService = {
   fetchSession: fetchSession,
   login: login,
   logout: logout,
   getViewEntries,
   getDocuments,
-  getDocument
+  getDocument,
+  getFormSchema
 };

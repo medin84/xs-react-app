@@ -1,42 +1,21 @@
 import React from "react";
 
-interface KeyValue {
-  [key: string]: any;
-}
-
-interface SchemaField {
-  type: string;
-  label: string;
-  field: string;
-}
+import { IFormElement, IAction, KeyValue } from "../../interfaces";
+import FormElement from "./FormElement";
 
 interface FormProps {
-  data: KeyValue;
-  schema: SchemaField[];
-  onAction?: () => void;
+  data: KeyValue<any>;
+  schema: IFormElement[];
+  onAction?: (action: IAction) => void;
+  onChange?: (field: IFormElement, newValue: any) => void;
 }
 
-interface FormState {
-  data: KeyValue;
-}
-
-class Form extends React.Component<FormProps, FormState> {
+class Form extends React.Component<FormProps> {
   render() {
-    const { data, schema } = this.props;
-
     return (
       <div className="form">
         <div className="form__container">
-          {schema.map(item => {
-            return (
-              <div className="form-group">
-                <div className="control-label">{item.label}</div>
-                <div className="controls">
-                  {JSON.stringify(data[item.field])}
-                </div>
-              </div>
-            );
-          })}
+          <FormElement {...this.props} />
         </div>
       </div>
     );

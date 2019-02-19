@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-interface ISchema {
+interface IViewSchema {
   "@alignment": number;
   "@category": boolean;
   "@columnNumber": number;
@@ -17,11 +17,12 @@ interface ISchema {
 interface ViewProps {
   moduleId: string;
   data: [];
-  schema: ISchema[];
+  schema: IViewSchema[];
 }
 
 class View extends React.Component<ViewProps> {
   getDb(item: any) {
+    // /{dbpath}/api/data/documents/unid/{docUnid}
     if (!item["@link"]) {
       return "";
     }
