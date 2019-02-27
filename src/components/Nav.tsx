@@ -6,6 +6,8 @@ import { INavEntry } from "../interfaces";
 interface NavProps {
   path: string;
   items: INavEntry[];
+  expanded: string[];
+  toggleCollapsible: (entry: INavEntry) => void;
 }
 
 interface NavState {
@@ -13,11 +15,13 @@ interface NavState {
 }
 
 class Nav extends React.Component<NavProps, NavState> {
-  state = {
-    toggle: true
-  };
+  constructor(props: NavProps, state: NavState) {
+    super(props, state);
 
-  getIconClassName(item: any): any {
+    this.state = { toggle: true };
+  }
+
+  getIconClassName(item: INavEntry): any {
     return (
       "side-tree-toggle fa " +
       (item.children && item.children.length ? "" : "side-tree-toggle_holder")
@@ -35,6 +39,7 @@ class Nav extends React.Component<NavProps, NavState> {
     e.preventDefault();
     item.expanded = !item.expanded;
     this.setState({ toggle: item.expanded });
+    // this.props.toggleCollapsible(item);
   }
 
   renderNavLink(item: INavEntry) {
@@ -43,7 +48,10 @@ class Nav extends React.Component<NavProps, NavState> {
         exact
         to={{ pathname: `${this.props.path}/views`, search: `${item.url}` }}
         className="nav-link"
-        activeClassName="-active"
+        activeClassName="active"
+        isActive={(match: any, location: any) => {
+          return location.search.indexOf(item.url) != -1;
+        }}
       >
         <i
           className={this.getIconClassName(item)}
@@ -67,17 +75,18 @@ class Nav extends React.Component<NavProps, NavState> {
   }
 
   render() {
-    if (!this.props.items || !this.props.items.length) {
+    const { items } = this.props;
+    if (!items || !items.length) {
       return null;
     }
 
     return (
       <ul>
-        {this.props.items.map(item => (
+        {items.map(item => (
           <li key={item.id} className={this.itemClass(item)}>
             {item.url ? this.renderNavLink(item) : this.renderNavHeader(item)}
             {item.children && item.children.length > 0 && (
-              <Nav path={this.props.path} items={item.children} />
+              <Nav {...this.props} items={item.children} />
             )}
           </li>
         ))}

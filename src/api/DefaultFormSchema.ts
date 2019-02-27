@@ -25,7 +25,15 @@ const DefaultFormSchema: IFormElement[] = [
       {
         type: "block",
         title: "DefaultFormSchema",
-        className: "alert alert-danger"
+        className: "alert alert-danger",
+        children: [
+          {
+            type: "text",
+            title: "",
+            name: "@form",
+            readOnly: true
+          }
+        ]
       },
       {
         type: "fieldset",

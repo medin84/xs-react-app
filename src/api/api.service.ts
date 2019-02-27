@@ -25,7 +25,8 @@ const fetchSession = async (): Promise<IApplicationState> => {
           sidenav: {
             gamburger: true,
             open: true,
-            items: mockData.authSession.ui.sidenav.items // resp.sidenav ? resp.sidenav.items : []
+            items: mockData.authSession.ui.sidenav.items, // resp.sidenav ? resp.sidenav.items : []
+            expanded: []
           }
         },
         user: {
@@ -56,7 +57,17 @@ const login = async (login: LoginState) => {
       "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
     },
     body: searchParams
-  }).then(response => response.json());
+  }).then(response => {
+    if (response.json) {
+      try {
+        return response.json();
+      } catch (e) {
+        return { error: false };
+      }
+    } else {
+      return { error: false };
+    }
+  });
 };
 
 const logout = async () => {
@@ -126,10 +137,12 @@ const getFormSchema = (formName: string) => {
   }
 };
 
+const isEnvProduction = process.env.NODE_ENV === "production";
+
 export const apiService = {
-  fetchSession: fetchSession,
-  login: login,
-  logout: logout,
+  fetchSession: isEnvProduction ? fetchSession : _fetchSession,
+  login: isEnvProduction ? login : _login,
+  logout: isEnvProduction ? logout : _logout,
   getViewEntries,
   getDocuments,
   getDocument,

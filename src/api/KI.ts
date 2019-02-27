@@ -12,14 +12,22 @@ const kiSchema: IFormElement[] = [
       },
       {
         id: "save_close",
-        caption: "Save & close"
+        caption: "Save & close",
+        className: "btn-primary"
       }
     ]
   },
   {
     type: "block",
-    title: "KI for header",
-    className: "content-header"
+    title: "",
+    className: "content-header",
+    children: [
+      {
+        type: "block",
+        title: "Карточка исполнения",
+        className: "header-title"
+      }
+    ]
   },
   {
     type: "block",
@@ -32,16 +40,26 @@ const kiSchema: IFormElement[] = [
         children: [
           {
             type: "text",
-            title: "Unid",
-            name: "@unid",
-            readOnly: true,
-            className: "span7"
+            title: "Исполнитель",
+            name: "IntExecut",
+            readOnly: true
           },
           {
             type: "text",
-            title: "Authors",
-            name: "@authors",
-            className: "span7",
+            title: "Дата исполнения",
+            name: "DateIsp",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Содержание отчета",
+            name: "ShortText",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Результат рассмотрения",
+            name: "ResultView",
             readOnly: true
           }
         ]

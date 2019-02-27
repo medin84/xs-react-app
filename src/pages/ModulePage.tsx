@@ -3,9 +3,12 @@ import { connect } from "react-redux";
 import { match, Route, RouteComponentProps, Switch } from "react-router-dom";
 import { bindActionCreators, Dispatch } from "redux";
 
-import { IApplicationState } from "../interfaces";
+import { IApplicationState, INavEntry } from "../interfaces";
 import { URL_DOCUMENTS, URL_VIEWS } from "../constants/UrlConstants";
-import { toggleSidenav } from "../actions/ui.actions";
+import {
+  toggleSidenav,
+  toggleCollapsibleSidenavEntry
+} from "../actions/ui.actions";
 import { logout } from "../actions/user.actions";
 import Navbar from "../components/Navbar";
 import NoMatch from "../components/NoMatch";
@@ -23,6 +26,7 @@ interface ModuleProps
   match: match<any>;
   onLogout: (history: any) => void;
   onSidenavToggle: () => void;
+  onToggleCollapsibleSidenavEntry: (entry: INavEntry) => void;
 }
 
 class ModulePage extends React.Component<ModuleProps> {
@@ -37,7 +41,13 @@ class ModulePage extends React.Component<ModuleProps> {
   }
 
   render() {
-    const { ui, history, match, onLogout } = this.props,
+    const {
+        ui,
+        history,
+        match,
+        onLogout,
+        onToggleCollapsibleSidenavEntry
+      } = this.props,
       moduleId = match.params.moduleId,
       navEntry = ui.sidenav.items.filter(it => it.id === moduleId);
 
@@ -52,7 +62,12 @@ class ModulePage extends React.Component<ModuleProps> {
           />
           <section className="main">
             <div className="main__container container">
-              <Sidenav path={match.url} navItems={navEntry} />
+              <Sidenav
+                path={match.url}
+                navItems={navEntry}
+                expanded={ui.sidenav.expanded}
+                toggleCollapsible={onToggleCollapsibleSidenavEntry}
+              />
               <main className="content">
                 <div className="content__container">
                   <Switch>
@@ -79,7 +94,11 @@ const mapStateToProps = (state: ModuleProps) => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     onLogout: bindActionCreators(logout, dispatch),
-    onSidenavToggle: bindActionCreators(toggleSidenav, dispatch)
+    onSidenavToggle: bindActionCreators(toggleSidenav, dispatch),
+    onToggleCollapsibleSidenavEntry: bindActionCreators(
+      toggleCollapsibleSidenavEntry,
+      dispatch
+    )
   };
 };
 

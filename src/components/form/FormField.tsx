@@ -9,40 +9,62 @@ interface FormFieldProps {
 }
 
 interface FormFieldState {
+  type: string;
   value: any;
 }
 
 class FormField extends React.Component<FormFieldProps, FormFieldState> {
   constructor(props: FormFieldProps, state: FormFieldState) {
     super(props, state);
-
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   componentDidMount() {
-    this.setState({
-      value: JSON.stringify(this.props.data[this.props.schema.name || ""])
-    });
+    const { schema, data } = this.props,
+      _value = data[schema.name || "-"];
+    let value,
+      type = typeof _value as string;
+
+    switch (type) {
+      case "string":
+      case "number":
+        value = _value;
+        break;
+
+      case "object":
+        if (_value.length) {
+          value = _value;
+          type = "array";
+        } else {
+          value = _value["data"];
+          type = _value["type"];
+        }
+        break;
+    }
+
+    this.setState({ value, type });
   }
 
   handleInputChange(e: any): void {
-    this.props.onChange &&
-      this.props.onChange(this.props.schema, e.target.value);
+    const { schema, onChange } = this.props;
+    onChange && onChange(schema, e.target.value);
     this.setState({
       value: e.target.value
     });
   }
 
-  renderReadOnly(schema: IFormElement) {
+  renderReadOnly() {
     return <div className="input-placeholder">{this.state.value}</div>;
   }
 
-  renderInput(schema: IFormElement) {
+  renderInput() {
+    const { schema } = this.props;
+    const { type, value } = this.state;
+
     try {
-      const { value } = this.state;
       return (
         <input
-          type={schema.type}
+          type={type}
           className={`input ${schema.className || ""}`}
           name={schema.name}
           value={value}
@@ -51,8 +73,7 @@ class FormField extends React.Component<FormFieldProps, FormFieldState> {
         />
       );
     } catch (e) {
-      console.log("renderInput::error");
-      return <div>{JSON.stringify(e)}</div>;
+      return <div>{JSON.stringify(schema)}</div>;
     }
   }
 
@@ -61,12 +82,12 @@ class FormField extends React.Component<FormFieldProps, FormFieldState> {
       return null;
     }
 
-    const { schema, data, children } = this.props;
+    const { schema, children } = this.props;
     let inputElement;
     if (schema.readOnly || schema.disabled) {
-      inputElement = this.renderReadOnly(schema);
+      inputElement = this.renderReadOnly();
     } else {
-      inputElement = this.renderInput(schema);
+      inputElement = this.renderInput();
     }
 
     return (

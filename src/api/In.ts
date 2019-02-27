@@ -12,14 +12,22 @@ const inSchema: IFormElement[] = [
       },
       {
         id: "save_close",
-        caption: "Save & close"
+        caption: "Save & close",
+        className: "btn-primary"
       }
     ]
   },
   {
     type: "block",
-    title: "In for header",
-    className: "content-header"
+    title: "",
+    className: "content-header",
+    children: [
+      {
+        type: "block",
+        title: "Входящий",
+        className: "header-title"
+      }
+    ]
   },
   {
     type: "block",
@@ -28,20 +36,73 @@ const inSchema: IFormElement[] = [
     children: [
       {
         type: "fieldset",
-        title: "properties",
+        title: "Свойства",
         children: [
           {
             type: "text",
-            title: "Unid",
-            name: "@unid",
-            readOnly: true,
-            className: "span7"
+            title: "Входящий",
+            name: "Vn",
+            readOnly: true
           },
           {
             type: "text",
-            title: "Authors",
-            name: "@authors",
-            className: "span7"
+            title: "Исходящий",
+            name: "In",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Откуда поступил",
+            name: "Corr",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Кому адресован",
+            name: "Recipient",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Вид доставки",
+            name: "DeliveryType1",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Тип документа",
+            name: "Vid1",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Краткое содержание",
+            name: "BriefContent",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Примечание",
+            name: "Remark",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Язык обращения",
+            name: "Language",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "К-во листов/экз/прил",
+            name: "Np",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Срок исполнения",
+            name: "CtrlDate",
+            readOnly: true
           }
         ]
       }

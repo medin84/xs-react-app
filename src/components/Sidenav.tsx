@@ -7,18 +7,25 @@ interface SidenavProps {
   title?: string;
   path: string;
   navItems: INavEntry[];
+  expanded: string[];
+  toggleCollapsible: (entry: INavEntry) => void;
 }
 
 class Sidenav extends React.Component<SidenavProps> {
   render() {
-    const { title, navItems } = this.props;
+    const { title, path, navItems, expanded, toggleCollapsible } = this.props;
 
     return (
       <aside className="sidenav">
         <div className="sidenav__container">
           <nav>
             {title && <h5 className="sidenav__nav_title">{title}</h5>}
-            <Nav path={this.props.path} items={navItems} />
+            <Nav
+              path={path}
+              items={navItems}
+              expanded={expanded}
+              toggleCollapsible={toggleCollapsible}
+            />
           </nav>
         </div>
       </aside>

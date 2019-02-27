@@ -12,14 +12,22 @@ const krSchema: IFormElement[] = [
       },
       {
         id: "save_close",
-        caption: "Save & close"
+        caption: "Save & close",
+        className: "btn-primary"
       }
     ]
   },
   {
     type: "block",
-    title: "KR for header",
-    className: "content-header"
+    title: "",
+    className: "content-header",
+    children: [
+      {
+        type: "block",
+        title: "Поручение по документу",
+        className: "header-title"
+      }
+    ]
   },
   {
     type: "block",
@@ -28,20 +36,36 @@ const krSchema: IFormElement[] = [
     children: [
       {
         type: "fieldset",
-        title: "properties",
+        title: "Свойства",
         children: [
           {
             type: "text",
-            title: "Unid",
-            name: "@unid",
-            readOnly: true,
-            className: "span7"
+            title: "Автор резолюции",
+            name: "AuthorRez",
+            readOnly: true
           },
           {
             type: "text",
-            title: "Authors",
-            name: "@authors",
-            className: "span7",
+            title: "Дата резолюции",
+            name: "DateRez",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Внутренние исполнители",
+            name: "IntExec",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Текст резолюции",
+            name: "Content",
+            readOnly: true
+          },
+          {
+            type: "text",
+            title: "Срок исполнения",
+            name: "CtrlDate",
             readOnly: true
           }
         ]

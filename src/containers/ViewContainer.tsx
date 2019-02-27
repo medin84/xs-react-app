@@ -1,17 +1,41 @@
 import React from "react";
-import { withRouter, RouteComponentProps, Link, match } from "react-router-dom";
-import { apiService } from "../api/api.service";
+import { match, RouteComponentProps, withRouter } from "react-router-dom";
 
+import { IDominoView, IDominoViewColumn, IDominoViewRow } from "../interfaces";
+import { apiService } from "../api/api.service";
 import View from "../components/view/View";
+import Pagination from "../components/Pagination";
 
 interface ModulePageRouteProps extends RouteComponentProps {
   moduleId: string;
   match: match<any>;
 }
 
-class ViewContainer extends React.Component<ModulePageRouteProps, any> {
+interface ModulePageRouteState {
+  data: {
+    view: IDominoView;
+    param: any;
+  };
+}
+
+class ViewContainer extends React.Component<
+  ModulePageRouteProps,
+  ModulePageRouteState
+> {
   mounted: boolean = false;
   unlisten: any;
+  promise: any;
+
+  constructor(props: ModulePageRouteProps, state: ModulePageRouteState) {
+    super(props, state);
+
+    this.handleDocumentHover = this.handleDocumentHover.bind(this);
+    this.handleDocumentClick = this.handleDocumentClick.bind(this);
+    this.handleExpandableClick = this.handleExpandableClick.bind(this);
+    this.handleSort = this.handleSort.bind(this);
+    this.handleChangeView = this.handleChangeView.bind(this);
+    this.handleChangePage = this.handleChangePage.bind(this);
+  }
 
   componentDidMount() {
     this.mounted = true;
@@ -28,6 +52,7 @@ class ViewContainer extends React.Component<ModulePageRouteProps, any> {
     this.mounted = false;
     this.unlisten && this.unlisten();
     this.unlisten = null;
+    // this.promise.abort();
   }
 
   fetchView(location: any) {
@@ -36,19 +61,94 @@ class ViewContainer extends React.Component<ModulePageRouteProps, any> {
     }
 
     // const params = new URLSearchParams(location.search);
-    apiService.getViewEntries(location.search).then(response => {
+    this.promise = apiService.getViewEntries(location.search).then(response => {
       if (!this.mounted) {
         return;
       }
 
       this.setState({
-        json: response
+        data: response
       });
     });
   }
 
+  handleDocumentHover(row: IDominoViewRow) {
+    // console.log("handleDocumentHover", row);
+  }
+
+  handleDocumentClick(row: IDominoViewRow) {
+    console.log("handleDocumentClick", row);
+  }
+
+  handleExpandableClick(row: IDominoViewRow) {
+    let { search } = this.props.location;
+    const params = new URLSearchParams(search);
+    params.delete("collapse");
+    params.delete("expand");
+    params.set(row.expanded ? "collapse" : "expand", row.pos);
+
+    this.fetchView({ search: `?${params}` });
+  }
+
+  handleSort(column: IDominoViewColumn) {
+    const { pathname, search } = this.props.location,
+      params = new URLSearchParams(search);
+    let sortDirection = null;
+
+    switch (column.sort) {
+      case "ASC":
+      case "DESC":
+        if (column.sort !== column.sorted) {
+          sortDirection = column.sort.toLowerCase();
+        }
+        break;
+      case "BOTH":
+        switch (column.sorted) {
+          case "ASC":
+            sortDirection = null;
+            break;
+          case "DESC":
+            sortDirection = "asc";
+            break;
+          default:
+            sortDirection = "desc";
+            break;
+        }
+        break;
+    }
+
+    if (sortDirection) {
+      params.set("sort", `${column.index},${sortDirection}`);
+    } else {
+      params.delete("sort");
+    }
+    params.delete("page");
+
+    this.props.history.push(`${pathname}?${params}`);
+  }
+
+  handleChangeView(viewName: string) {
+    let { pathname, search } = this.props.location;
+    const params = new URLSearchParams(search);
+    params.set("view", viewName);
+    params.delete("sort");
+    params.delete("page");
+
+    this.props.history.push(`${pathname}?${params}`);
+  }
+
+  handleChangePage(parameter: string, page: number) {
+    console.log("handleChangePage", parameter, page);
+
+    let { pathname, search } = this.props.location;
+    const params = new URLSearchParams(search);
+    params.set(parameter, `${page}`);
+
+    this.props.history.push(`${pathname}?${params}`);
+  }
+
   render() {
-    if (!this.mounted) {
+    if (!this.mounted || !this.state) {
       return null;
     }
 
@@ -57,13 +157,30 @@ class ViewContainer extends React.Component<ModulePageRouteProps, any> {
         params: { moduleId }
       }
     } = this.props;
+    const { view, param } = this.state.data;
 
     return (
-      <View
-        moduleId={moduleId}
-        data={this.state.json.view.data}
-        schema={this.state.json.view.schema}
-      />
+      <>
+        <header className="content-header">
+          <h1 className="content-title">{param.viewTitle}</h1>
+          <div className="content-actions">
+            {view.pageable && (
+              <Pagination {...view.pageable} onChange={this.handleChangePage} />
+            )}
+          </div>
+        </header>
+        <View
+          moduleId={moduleId}
+          data={this.state.data}
+          selectedIds={[]}
+          onDocumentHover={this.handleDocumentHover}
+          onDocumentClick={this.handleDocumentClick}
+          onExpandableClick={this.handleExpandableClick}
+          onSort={this.handleSort}
+          onChangeView={this.handleChangeView}
+          onChangePage={this.handleChangePage}
+        />
+      </>
     );
   }
 }

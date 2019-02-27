@@ -8,16 +8,20 @@ interface UserProfileState {
 }
 
 class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
-  state = {
-    user: {
-      name: "",
-      department: "",
-      post: "",
-      fullname: "",
-      notesname: ""
-    },
-    langs: []
-  };
+  constructor(props: UserProfileProps, state: UserProfileState) {
+    super(props, state);
+
+    this.state = {
+      user: {
+        name: "",
+        department: "",
+        post: "",
+        fullname: "",
+        notesname: ""
+      },
+      langs: []
+    };
+  }
 
   saveUserProfile() {}
 

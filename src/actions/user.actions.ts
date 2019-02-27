@@ -50,16 +50,17 @@ export const fetchSession = () => async (dispatch: Dispatch) => {
 export const login = (history: any, loginState: LoginState) => async (
   dispatch: Dispatch
 ) => {
-  const response = await apiService.login(loginState);
-
-  if (response.error) {
-    dispatch(loginError(response.error));
-    return;
-  }
+  const req = apiService.login(loginState);
+  req.then(response => {
+    if (response.error) {
+      dispatch(loginError(response.error));
+      return;
+    }
+  });
 
   // dispatch(loginSuccess(response));
   // dispatch(setUIState(response.ui));
-  await fetchSession()(dispatch);
+  fetchSession()(dispatch);
   history.push(URL_WS);
 };
 

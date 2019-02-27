@@ -30,3 +30,24 @@ h5.sidenav__nav_title {
   margin: 0 !important;
   min-height: 0 !important;
 }
+
+.cinzento .container {
+  max-width: 100% !important;
+}
+
+.view__col.view__col--category-indent {
+  max-width: none;
+  width: auto;
+}
+
+.view__col--icon {
+  width: 16px;
+}
+
+.pagination {
+  float: none !important;
+}
+
+.pagination__page.-arrow:after {
+  top: 35%;
+}

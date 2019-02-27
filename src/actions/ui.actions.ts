@@ -2,7 +2,8 @@ import { IUIState, INavEntry } from "../interfaces";
 
 export const UI_SET_STATE = "UI_SET_STATE";
 export const UI_TOGGLE_SIDENAV = "UI_TOGGLE_SIDENAV";
-export const UI_TOGGLE_NAV_ENTRY_EXPANDED = "UI_TOGGLE_NAV_ENTRY_EXPANDED";
+export const UI_TOGGLE_COLLAPSIBLE_NAV_ENTRY =
+  "UI_TOGGLE_COLLAPSIBLE_NAV_ENTRY";
 
 export const setUIState = (ui: IUIState) => ({
   type: UI_SET_STATE,
@@ -13,7 +14,7 @@ export const toggleSidenav = () => ({
   type: UI_TOGGLE_SIDENAV
 });
 
-export const toggleSidenavEntryExpanded = (entry: INavEntry) => ({
-  type: UI_TOGGLE_NAV_ENTRY_EXPANDED,
+export const toggleCollapsibleSidenavEntry = (entry: INavEntry) => ({
+  type: UI_TOGGLE_COLLAPSIBLE_NAV_ENTRY,
   entry
 });

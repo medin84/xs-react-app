@@ -1,72 +1,47 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
-interface IViewSchema {
-  "@alignment": number;
-  "@category": boolean;
-  "@columnNumber": number;
-  "@field": boolean;
-  "@hidden": boolean;
-  "@name": string;
-  "@response": boolean;
-  "@title": string;
-  "@twistie": boolean;
-  "@width": number;
-}
+import {
+  IDominoView,
+  IDominoViewColumn,
+  IDominoViewRow
+} from "../../interfaces";
+import ViewColgroup from "./ViewColgroup";
+import ViewHead from "./ViewHead";
+import ViewBody from "./ViewBody";
 
 interface ViewProps {
   moduleId: string;
-  data: [];
-  schema: IViewSchema[];
+  data: {
+    view: IDominoView;
+    param: any;
+  };
+  selectedIds: string[];
+  onDocumentHover: (row: IDominoViewRow) => void;
+  onDocumentClick: (row: IDominoViewRow) => void;
+  onExpandableClick: (row: IDominoViewRow) => void;
+  onSort: (column: IDominoViewColumn) => void;
+  onChangeView: (viewName: string) => void;
+  onChangePage: (parameter: string, page: number) => void;
 }
 
 class View extends React.Component<ViewProps> {
-  getDb(item: any) {
-    // /{dbpath}/api/data/documents/unid/{docUnid}
-    if (!item["@link"]) {
-      return "";
-    }
-    const dbName = item["@link"].href.split("/api/data/documents/unid/")[0];
-    return dbName;
-  }
-
   render() {
-    const { moduleId, data, schema } = this.props;
+    const {
+      data: { view, param }
+    } = this.props;
+    const hasRows = view.rows && view.rows.length > 0;
 
     return (
       <div className="view">
         <div className="view__container">
-          <table className="table table-sm">
-            <tr>
-              {schema.map((schemaItem: any) => {
-                return (
-                  !schemaItem["@hidden"] && <th>{schemaItem["@title"]}</th>
-                );
-              })}
-            </tr>
-            {data.map((dataItem: any) => (
-              <tr>
-                {schema.map((schemaItem: any) => {
-                  return (
-                    !schemaItem["@hidden"] && (
-                      <td>
-                        <Link
-                          to={{
-                            pathname: `/bd/${moduleId}/documents`,
-                            search: `database=${this.getDb(
-                              dataItem
-                            )}&document=${dataItem["@unid"]}`
-                          }}
-                        >
-                          {dataItem[schemaItem["@name"]]}
-                        </Link>
-                      </td>
-                    )
-                  );
-                })}
-              </tr>
-            ))}
+          <table className="view-table">
+            <ViewColgroup columns={view.cols} />
+            <ViewHead {...this.props} columns={view.cols} />
+            {hasRows && <ViewBody {...this.props} />}
           </table>
+          {!hasRows && (
+            <h4 className="view__no-entry">{param.textNoEntries}</h4>
+          )}
         </div>
       </div>
     );

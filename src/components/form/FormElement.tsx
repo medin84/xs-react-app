@@ -21,7 +21,7 @@ class FormElement extends React.Component<FormProps, FormState> {
       <div className={element.className}>
         {(element.actions || []).map(action => (
           <button
-            className="btn"
+            className={`btn ${action.className}`}
             type="button"
             onClick={() => this.props.onAction && this.props.onAction(action)}
           >

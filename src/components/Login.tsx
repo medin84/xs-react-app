@@ -21,14 +21,14 @@ export interface LoginState {
 }
 
 class Login extends React.Component<LoginProps, LoginState> {
-  state = {
-    login: "",
-    pwd: "",
-    saveAuth: false
-  };
-
   constructor(props: LoginProps) {
     super(props);
+
+    this.state = {
+      login: "",
+      pwd: "",
+      saveAuth: false
+    };
 
     this.onInputChange = this.onInputChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);

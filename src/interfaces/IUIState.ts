@@ -10,5 +10,6 @@ export interface IUIState {
     gamburger: boolean;
     open: boolean;
     items: INavEntry[];
+    expanded: string[];
   };
 }

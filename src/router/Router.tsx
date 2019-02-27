@@ -9,8 +9,8 @@ import { connect } from "react-redux";
 import { Dispatch, bindActionCreators } from "redux";
 
 import { URL_WS, URL_LOGIN, URL_MODULE } from "../constants/UrlConstants";
-import { fetchSession } from "../actions/user.actions";
 import { IApplicationState } from "../interfaces";
+import { fetchSession } from "../actions/user.actions";
 import { PrivateRoute } from "./PrivateRoute";
 import WorkspacePage from "../pages/WorkspacePage";
 import ModulePage from "../pages/ModulePage";
@@ -26,9 +26,11 @@ interface AppRouterState {
 }
 
 class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
-  state = {
-    loading: true
-  };
+  constructor(props: AppRouterProps, state: AppRouterState) {
+    super(props, state);
+
+    this.state = { loading: true };
+  }
 
   async componentDidMount() {
     await this.props.fetchSession();
