@@ -1,5 +1,8 @@
+import axios from "axios";
+
 import mockData from "./mockData";
 import { IApplicationState } from "../interfaces";
+import { URL_VIEW } from "../constants/UrlConstants";
 import { LoginState } from "../components/Login";
 
 import InFormSchema from "./In";
@@ -9,12 +12,18 @@ import DefaultFormSchema from "./DefaultFormSchema";
 
 const context = "XSmart"; // window.location.pathname.split("/")[1];
 
-const fetchSession = async (): Promise<IApplicationState> => {
-  return await fetch(`/${context}/session`)
+const fetchSession = (): Promise<IApplicationState> => {
+  return axios
+    .get(`/${context}/session`)
     .then(response => {
-      return response.json ? response.json() : Object.create({});
+      return response.data ? response.data : Object.create({});
     })
-    .then(resp => {
+    .then((resp: any) => {
+      const modules = mockData.authSession.ui.sidenav.items;
+      modules.map(m => {
+        m.id = `${URL_VIEW}?dbid=${m.id}`;
+      });
+
       return {
         ui: {
           orgName: resp.orgName,
@@ -25,7 +34,7 @@ const fetchSession = async (): Promise<IApplicationState> => {
           sidenav: {
             gamburger: true,
             open: true,
-            items: mockData.authSession.ui.sidenav.items, // resp.sidenav ? resp.sidenav.items : []
+            items: modules, // resp.sidenav ? resp.sidenav.items : []
             expanded: []
           }
         },
@@ -42,39 +51,30 @@ const fetchSession = async (): Promise<IApplicationState> => {
     });
 };
 
-const login = async (login: LoginState) => {
+const login = (login: LoginState): Promise<any> => {
+  // const formData = new FormData();
   const params: any = { ...login };
+  // Object.keys(params).map(key => {
+  //   formData.set(key, params[key]);
+  // });
   const searchParams = Object.keys(params)
     .map(key => {
       return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
     })
     .join("&");
 
-  return await fetch(`/${context}/Login`, {
-    credentials: "include",
+  return axios({
+    url: `/${context}/Login`,
     method: "POST",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+      "Content-Type": "application/x-www-form-urlencoded"
     },
-    body: searchParams
-  }).then(response => {
-    if (response.json) {
-      try {
-        return response.json();
-      } catch (e) {
-        return { error: false };
-      }
-    } else {
-      return { error: false };
-    }
+    data: searchParams
   });
 };
 
-const logout = async () => {
-  return await fetch(`/${context}/Logout`, {
-    credentials: "include",
-    method: "POST"
-  });
+const logout = (): Promise<any> => {
+  return axios.post(`/${context}/Logout`);
 };
 
 const _fetchSession = async (): Promise<IApplicationState> => {
@@ -94,14 +94,13 @@ const _logout = async () => {
   });
 };
 
-const getViewEntries = async (query: string) => {
-  return await fetch(`/${context}/api/view${query}`, {
-    credentials: "include",
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json;charset=UTF-8"
-    }
-  }).then(response => response.json());
+const getView = (
+  query: string,
+  params?: { cancelToken?: any }
+): Promise<any> => {
+  return axios
+    .get(`/${context}/api/view${query}`, params)
+    .then(response => response.data);
 };
 
 const getDocuments = async (query: string) => {
@@ -143,7 +142,7 @@ export const apiService = {
   fetchSession: isEnvProduction ? fetchSession : _fetchSession,
   login: isEnvProduction ? login : _login,
   logout: isEnvProduction ? logout : _logout,
-  getViewEntries,
+  getView,
   getDocuments,
   getDocument,
   getFormSchema

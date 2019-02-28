@@ -1,46 +1,24 @@
 import React from "react";
 
 import { IDominoViewColumn } from "../../interfaces";
+import { getColumnClassNames, getColumnStyle } from "./view.util";
 
 interface Props {
   columns: IDominoViewColumn[];
 }
 
-class ViewColgroup extends React.PureComponent<Props> {
-  getColCssClassName(column: IDominoViewColumn): string {
-    if (column.icon) {
-      return "view__col--icon";
-    } else if (column.category) {
-      return "view__col--category-indent";
-    }
-    return "";
-  }
+export function ViewColgroup(props: Props) {
+  const { columns } = props,
+    lastColIndex = columns.length - 1;
 
-  getColStyle(column: IDominoViewColumn, isLast: boolean): React.CSSProperties {
-    if (column.icon || column.category || isLast) {
-      return {};
-    }
-
-    return {
-      width: column.computedWidth
-    };
-  }
-
-  render() {
-    const { columns } = this.props,
-      lastColIndex = columns.length - 1;
-
-    return (
-      <colgroup>
-        {columns.map((column, index) => (
-          <col
-            className={this.getColCssClassName(column)}
-            style={this.getColStyle(column, index === lastColIndex)}
-          />
-        ))}
-      </colgroup>
-    );
-  }
+  return (
+    <colgroup>
+      {columns.map((column, index) => (
+        <col
+          className={getColumnClassNames(column)}
+          style={getColumnStyle(column, index === lastColIndex)}
+        />
+      ))}
+    </colgroup>
+  );
 }
-
-export default ViewColgroup;

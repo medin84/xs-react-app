@@ -1,24 +1,18 @@
 import React from "react";
-import {
-  HashRouter as Router,
-  Route,
-  Switch,
-  Redirect
-} from "react-router-dom";
+import { HashRouter, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { Dispatch, bindActionCreators } from "redux";
 
-import { URL_WS, URL_LOGIN, URL_MODULE } from "../constants/UrlConstants";
+import { URL_WS, URL_LOGIN } from "../constants/UrlConstants";
 import { IApplicationState } from "../interfaces";
 import { fetchSession } from "../actions/user.actions";
 import { PrivateRoute } from "./PrivateRoute";
 import WorkspacePage from "../pages/WorkspacePage";
-import ModulePage from "../pages/ModulePage";
 import LoginPage from "../pages/LoginPage";
 import NoMatch from "../components/NoMatch";
 
 interface AppRouterProps extends IApplicationState {
-  fetchSession: () => void;
+  fetchSession: (history?: any) => void;
 }
 
 interface AppRouterState {
@@ -47,9 +41,8 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     const { user } = this.props;
 
     return (
-      <Router>
+      <HashRouter>
         <Switch>
-          <Route exact path="/" render={() => <Redirect to={URL_WS} />} />
           <Route exact path={URL_LOGIN} component={LoginPage} />
           <PrivateRoute
             authenticated={user.isAuthenticated}
@@ -57,15 +50,9 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
             path={URL_WS}
             component={WorkspacePage}
           />
-          <PrivateRoute
-            authenticated={user.isAuthenticated}
-            redirectTo={URL_LOGIN}
-            path={URL_MODULE}
-            component={ModulePage}
-          />
           <Route component={NoMatch} />
         </Switch>
-      </Router>
+      </HashRouter>
     );
   }
 }

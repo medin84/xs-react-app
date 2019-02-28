@@ -6,10 +6,17 @@ import {
   IDominoViewColumn,
   IDominoViewRow
 } from "../../interfaces";
-import Pagination from "../Pagination";
+import { URL_DOCUMENT } from "../../constants/UrlConstants";
+import { Pagination } from "../Pagination";
+import { ButtonExpandableToggle } from "./ButtonExpandableToggle";
+import {
+  getRowClassNames,
+  getColumnClassNames,
+  getCellStyle
+} from "./view.util";
 
 interface Props {
-  moduleId: string;
+  dbid: string;
   data: {
     view: IDominoView;
     param: any;
@@ -25,25 +32,24 @@ interface State {
 }
 
 class ViewBody extends React.Component<Props, State> {
-  getColumnStyle(column: IDominoViewColumn): React.CSSProperties {
-    return {
-      color: column.color,
-      fontWeight: column.fontBold ? "bold" : "normal"
-    };
-  }
-
   getDocumentLinkProps(unid: string) {
     return {
-      pathname: `/bd/${this.props.moduleId}/documents`,
-      search: `?database=${this.props.data.param.database}&document=${unid}`
+      pathname: URL_DOCUMENT,
+      search: `?dbid=${this.props.dbid}&database=${
+        this.props.data.param.database
+      }&document=${unid}`
     };
   }
 
   renderDocumentLink(column: IDominoViewColumn, unid: string, value: string) {
+    if (!unid) {
+      return value;
+    }
+
     return (
       <Link
         className="view__link"
-        style={this.getColumnStyle(column)}
+        style={getCellStyle(column)}
         to={this.getDocumentLinkProps(unid)}
       >
         {value}
@@ -51,157 +57,102 @@ class ViewBody extends React.Component<Props, State> {
     );
   }
 
-  renderExpandableToggleButton(row: IDominoViewRow) {
-    let indentBlock;
-    // if (row.indentLevel > 0) {
-    //   indentBlock = (
-    //     <div className="view__response-indent">
-    //       <div
-    //         className={`view__response-indent-level __il${row.indentLevel}`}
-    //       />
-    //     </div>
-    //   );
-    // }
-
-    if (!row.expandable) {
-      return (
-        <>
-          {indentBlock}
-          <button
-            type="button"
-            className="view__toggle-response-btn-placeholder"
-          />
-        </>
-      );
-    }
-
-    return (
-      <>
-        {indentBlock}
-        <button
-          type="button"
-          className={`view__toggle-response-btn view__toggle-response-btn--${
-            row.expanded ? "collapsible" : "expandable"
-          }`}
-          onClick={() => {
-            this.props.onExpandableClick(row);
-          }}
-        />
-      </>
-    );
-  }
-
-  renderIconTd(icon: string) {
-    const { iconPath, iconPrfx, iconExt } = this.props.data.param;
-    return (
-      <td className="view__col view__col--icon">
-        <img src={`${iconPath}${iconPrfx}${icon}${iconExt}`} />
-      </td>
-    );
-  }
-
-  renderCategoryIndentTd() {
-    return <td className="view__col view__col--category-indent" />;
-  }
-
-  renderTd(
+  renderCell(
     row: IDominoViewRow,
     column: IDominoViewColumn,
     colSpan: number,
     value: string
   ) {
-    if (column.icon) {
-      return value ? this.renderIconTd(value) : <td />;
-    } else if (value === this.props.data.param.indentValue) {
-      return this.renderCategoryIndentTd();
+    if (!value) {
+      return <td className={getColumnClassNames(column)} colSpan={colSpan} />;
     }
 
-    if (row.type === "TOTAL") {
+    if (column.icon) {
+      const { iconPath, iconPrfx, iconExt } = this.props.data.param;
       return (
-        <td>{value && <span className="view__total-count">{value}</span>}</td>
+        <td className="view__col view__col--icon">
+          <img src={`${iconPath}${iconPrfx}${value}${iconExt}`} />
+        </td>
+      );
+    } else if (value === this.props.data.param.indentValue) {
+      return <td className="view__col view__col--category-indent" />;
+    }
+
+    switch (row.type) {
+      case "TOTAL":
+        return (
+          <td>
+            <span className="view__total-count">{value}</span>
+          </td>
+        );
+      case "CATEGORY":
+        if (column.twistie) {
+          return (
+            <td
+              className="view__col"
+              colSpan={colSpan}
+              style={getCellStyle(column)}
+            >
+              <ButtonExpandableToggle
+                row={row}
+                onClick={this.props.onExpandableClick}
+              />
+              {value}
+            </td>
+          );
+        }
+        break;
+    }
+
+    let indenter = null;
+    if (column.twistie && row.type === "RESPONSE") {
+      indenter = (
+        <div className="view__response-indent">
+          <div
+            className={`view__response-indent-level __il${row.indentLevel}`}
+          />
+        </div>
       );
     }
 
-    let showExp;
-    if (row.type === "CATEGORY") {
-      showExp = column.twistie && !!value;
-    } else {
-      showExp = column.twistie; // && row.expandable;
-    }
-
     return (
-      <td
-        className={`view__col ${
-          !value && row.expandable && !column.twistie
-            ? "view__col--category-indent"
-            : ""
-        }`}
-        colSpan={colSpan}
-        style={this.getColumnStyle(column)}
-      >
-        {showExp && this.renderExpandableToggleButton(row)}
-        {value && row.type === "CATEGORY" ? (
-          <span style={this.getColumnStyle(column)}>
-            {row.unid
-              ? this.renderDocumentLink(column, row.unid, value)
-              : value}
-          </span>
-        ) : row.unid && value ? (
-          this.renderDocumentLink(column, row.unid, value)
-        ) : (
-          value
+      <td className="view__col" colSpan={colSpan}>
+        {indenter}
+        {column.twistie && (
+          <ButtonExpandableToggle
+            row={row}
+            onClick={this.props.onExpandableClick}
+          />
         )}
+        {this.renderDocumentLink(column, row.unid, value)}
       </td>
     );
   }
 
   render() {
     const {
-      data: { view, param }
+      data: { view, param },
+      onDocumentHover,
+      onChangePage
     } = this.props;
+    let rowCellsCount: number,
+      colCount: number,
+      colSpan = 0,
+      checkColSpan = false;
 
     return (
       <tbody>
         {view.rows.map(row => {
-          const cellsCount = row.cells.length;
-          const colCount =
-            view.cols.length > view.columnCount
-              ? view.cols.length
-              : view.columnCount;
-          const b = colCount > cellsCount;
-
-          let indenter = [];
-          let rowClassName;
-          switch (row.type) {
-            case "CATEGORY":
-              rowClassName = "view__row view__category";
-              break;
-            case "DOCUMENT":
-              rowClassName = "view__row view__doc";
-              break;
-            case "RESPONSE":
-              rowClassName = "view__row view__doc view__doc--response";
-              // for (let i = 0; i < row.indentLevel; i++) {
-              //   indenter.push(<td />);
-              // }
-              break;
-            case "TOTAL":
-              rowClassName = "view__row view__total";
-              break;
-          }
+          rowCellsCount = row.cells.length;
+          colCount = Math.max(view.cols.length, view.columnCount);
+          checkColSpan = colCount > rowCellsCount;
+          colSpan = 0;
 
           if (row.pageable) {
             return (
-              <tr
-                key={`pageable-row-${row.pageable.query}`}
-                className="view__sub-pagination"
-              >
+              <tr key={row.pageable.query} className="view__sub-pagination">
                 <td className="view__col" colSpan={colCount}>
-                  <Pagination
-                    key={`pageable${row.pageable.query}`}
-                    {...row.pageable}
-                    onChange={this.props.onChangePage}
-                  />
+                  <Pagination {...row.pageable} onChange={onChangePage} />
                 </td>
               </tr>
             );
@@ -209,20 +160,20 @@ class ViewBody extends React.Component<Props, State> {
 
           return (
             <tr
-              className={rowClassName}
-              key={`${param.viewName}${row.pos}`}
+              className={getRowClassNames(row)}
+              key={param.viewName + row.pos}
               data-pos={row.pos}
-              onMouseEnter={() => this.props.onDocumentHover(row)}
+              onMouseEnter={() => onDocumentHover(row)}
             >
-              {row.cells.map((value, i) => {
-                if (b) {
-                  const needColspan = b && i + 1 == cellsCount,
-                    colSpan = needColspan ? colCount - i : 0;
-
-                  return this.renderTd(row, view.cols[i], colSpan, value);
+              {row.cells.map((value, index) => {
+                if (checkColSpan) {
+                  // isLastRowCell = index + 1 === rowCellsCount;
+                  if (index + 1 === rowCellsCount) {
+                    colSpan = colCount - index;
+                  }
                 }
 
-                return this.renderTd(row, view.cols[i], 0, value);
+                return this.renderCell(row, view.cols[index], colSpan, value);
               })}
             </tr>
           );

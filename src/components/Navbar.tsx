@@ -10,7 +10,7 @@ interface NavbarProps extends IApplicationState, RouteComponentProps {
   onLogout: () => void;
 }
 
-class Navbar extends React.Component<NavbarProps> {
+class Navbar extends React.PureComponent<NavbarProps> {
   render() {
     const {
       ui: { title, orgName, logo, sidenav },

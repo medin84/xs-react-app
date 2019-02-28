@@ -13,7 +13,7 @@ interface LoginPageProps extends RouteComponentProps {
   onSubmitLoginForm: (history: any, credentials: LoginState) => void;
 }
 
-class LoginPage extends React.Component<LoginPageProps> {
+class LoginPage extends React.PureComponent<LoginPageProps> {
   i18n = {
     user: "User",
     password: "Password",

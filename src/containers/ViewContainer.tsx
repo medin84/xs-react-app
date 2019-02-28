@@ -1,13 +1,13 @@
 import React from "react";
 import { match, RouteComponentProps, withRouter } from "react-router-dom";
+import axios from "axios";
 
 import { IDominoView, IDominoViewColumn, IDominoViewRow } from "../interfaces";
 import { apiService } from "../api/api.service";
 import View from "../components/view/View";
-import Pagination from "../components/Pagination";
+import { Pagination } from "../components/Pagination";
 
 interface ModulePageRouteProps extends RouteComponentProps {
-  moduleId: string;
   match: match<any>;
 }
 
@@ -22,9 +22,8 @@ class ViewContainer extends React.Component<
   ModulePageRouteProps,
   ModulePageRouteState
 > {
-  mounted: boolean = false;
-  unlisten: any;
-  promise: any;
+  historyListener: any;
+  request: any;
 
   constructor(props: ModulePageRouteProps, state: ModulePageRouteState) {
     super(props, state);
@@ -38,10 +37,10 @@ class ViewContainer extends React.Component<
   }
 
   componentDidMount() {
-    this.mounted = true;
-    this.unlisten = this.props.history.listen((location: any, action: any) => {
-      if (this.props.location.pathname === location.pathname) {
-        // console.log("View::history.listen", location, this.props);
+    const { pathname } = this.props.location;
+    this.historyListener = this.props.history.listen(location => {
+      const isSameModule = pathname === location.pathname;
+      if (isSameModule) {
         this.fetchView(location);
       }
     });
@@ -49,27 +48,29 @@ class ViewContainer extends React.Component<
   }
 
   componentWillUnmount() {
-    this.mounted = false;
-    this.unlisten && this.unlisten();
-    this.unlisten = null;
-    // this.promise.abort();
+    this.historyListener && this.historyListener();
+    this.request && this.request.cancel();
   }
 
   fetchView(location: any) {
-    if (!this.mounted) {
-      return;
-    }
+    this.request && this.request.cancel();
+    this.request = axios.CancelToken.source();
 
     // const params = new URLSearchParams(location.search);
-    this.promise = apiService.getViewEntries(location.search).then(response => {
-      if (!this.mounted) {
-        return;
-      }
-
-      this.setState({
-        data: response
+    apiService
+      .getView(location.search, { cancelToken: this.request.token })
+      .then(response => {
+        this.setState({
+          data: response
+        });
+      })
+      .catch(err => {
+        if (axios.isCancel(err)) {
+          console.log("Request canceled", err.message);
+        } else {
+          // handle error
+        }
       });
-    });
   }
 
   handleDocumentHover(row: IDominoViewRow) {
@@ -148,38 +149,38 @@ class ViewContainer extends React.Component<
   }
 
   render() {
-    if (!this.mounted || !this.state) {
+    if (!this.state) {
       return null;
     }
 
-    const {
-      match: {
-        params: { moduleId }
-      }
-    } = this.props;
+    const { match, location } = this.props;
     const { view, param } = this.state.data;
+    const search = new URLSearchParams(location.search);
+    const dbid = search.get("dbid") || "";
 
     return (
       <>
         <header className="content-header">
-          <h1 className="content-title">{param.viewTitle}</h1>
-          <div className="content-actions">
-            {view.pageable && (
-              <Pagination {...view.pageable} onChange={this.handleChangePage} />
-            )}
-          </div>
+          <h1 className="header-title">{param.viewTitle}</h1>
         </header>
-        <View
-          moduleId={moduleId}
-          data={this.state.data}
-          selectedIds={[]}
-          onDocumentHover={this.handleDocumentHover}
-          onDocumentClick={this.handleDocumentClick}
-          onExpandableClick={this.handleExpandableClick}
-          onSort={this.handleSort}
-          onChangeView={this.handleChangeView}
-          onChangePage={this.handleChangePage}
-        />
+        <div className="content-actions">
+          {view.pageable && (
+            <Pagination {...view.pageable} onChange={this.handleChangePage} />
+          )}
+        </div>
+        <div className="content-body" style={{ padding: 0 }}>
+          <View
+            dbid={dbid}
+            data={this.state.data}
+            selectedIds={[]}
+            onDocumentHover={this.handleDocumentHover}
+            onDocumentClick={this.handleDocumentClick}
+            onExpandableClick={this.handleExpandableClick}
+            onSort={this.handleSort}
+            onChangeView={this.handleChangeView}
+            onChangePage={this.handleChangePage}
+          />
+        </div>
       </>
     );
   }

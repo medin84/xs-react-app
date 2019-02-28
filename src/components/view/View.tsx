@@ -5,12 +5,12 @@ import {
   IDominoViewColumn,
   IDominoViewRow
 } from "../../interfaces";
-import ViewColgroup from "./ViewColgroup";
+import { ViewColgroup } from "./ViewColgroup";
 import ViewHead from "./ViewHead";
 import ViewBody from "./ViewBody";
 
 interface ViewProps {
-  moduleId: string;
+  dbid: string;
   data: {
     view: IDominoView;
     param: any;

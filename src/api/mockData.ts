@@ -23,7 +23,7 @@ const authSession: IApplicationState = {
     displayMailLink: true,
     token: "",
     mailFilePath: "",
-    mailLink: "/mail"
+    mailLink: "/XSmart/mail"
   }
 };
 

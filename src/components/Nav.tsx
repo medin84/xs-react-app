@@ -2,9 +2,10 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 import { INavEntry } from "../interfaces";
+import { URL_VIEW } from "../constants/UrlConstants";
 
 interface NavProps {
-  path: string;
+  dbid: string;
   items: INavEntry[];
   expanded: string[];
   toggleCollapsible: (entry: INavEntry) => void;
@@ -43,14 +44,21 @@ class Nav extends React.Component<NavProps, NavState> {
   }
 
   renderNavLink(item: INavEntry) {
+    const search = new URLSearchParams(item.url);
+    search.set("dbid", this.props.dbid);
+
     return (
       <NavLink
         exact
-        to={{ pathname: `${this.props.path}/views`, search: `${item.url}` }}
+        to={{ pathname: URL_VIEW, search: `${search}` }}
         className="nav-link"
         activeClassName="active"
-        isActive={(match: any, location: any) => {
-          return location.search.indexOf(item.url) != -1;
+        isActive={(match, location) => {
+          // console.log(item.url, location.search);
+          const itemSearch = new URLSearchParams(item.url);
+          const locationSearch = new URLSearchParams(location.search);
+          return itemSearch.get("view") === locationSearch.get("view");
+          // return location.search.indexOf(item.url) != -1;
         }}
       >
         <i

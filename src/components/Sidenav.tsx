@@ -5,7 +5,7 @@ import Nav from "./Nav";
 
 interface SidenavProps {
   title?: string;
-  path: string;
+  dbid: string;
   navItems: INavEntry[];
   expanded: string[];
   toggleCollapsible: (entry: INavEntry) => void;
@@ -13,7 +13,7 @@ interface SidenavProps {
 
 class Sidenav extends React.Component<SidenavProps> {
   render() {
-    const { title, path, navItems, expanded, toggleCollapsible } = this.props;
+    const { title, dbid, navItems, expanded, toggleCollapsible } = this.props;
 
     return (
       <aside className="sidenav">
@@ -21,7 +21,7 @@ class Sidenav extends React.Component<SidenavProps> {
           <nav>
             {title && <h5 className="sidenav__nav_title">{title}</h5>}
             <Nav
-              path={path}
+              dbid={dbid}
               items={navItems}
               expanded={expanded}
               toggleCollapsible={toggleCollapsible}

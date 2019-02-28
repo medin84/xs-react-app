@@ -1,5 +1,6 @@
 .sign-in-page {
-  /* background: url(http://sed.mtcom.kz:91/SharedResources/xpage/img/fon.jpg) no-repeat center center fixed; */
+  background: url(http://sed.mtcom.kz:91/SharedResources/xpage/img/fon.jpg)
+    no-repeat center center fixed;
   background-size: cover;
   font: 15px/1.5 Roboto, arial, sans-serif;
   margin: 0;

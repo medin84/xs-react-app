@@ -35,37 +35,36 @@ const loginError = (error: any) => ({
   error
 });
 
-export const fetchSession = () => async (dispatch: Dispatch) => {
-  const response = await apiService.fetchSession();
-
-  if (response.error) {
-    dispatch(fetchSessionFailure(response.error));
-    return;
-  }
-
-  dispatch(fetchSessionSuccess(response));
-  dispatch(setUIState(response.ui));
+export const fetchSession = (history?: any) => async (dispatch: Dispatch) => {
+  await apiService
+    .fetchSession()
+    .then(response => {
+      dispatch(fetchSessionSuccess(response));
+      dispatch(setUIState(response.ui));
+      history && history.push(URL_WS);
+    })
+    .catch(err => {
+      dispatch(fetchSessionFailure(err));
+    });
 };
 
-export const login = (history: any, loginState: LoginState) => async (
+export const login = (history: any, loginState: LoginState) => (
   dispatch: Dispatch
 ) => {
-  const req = apiService.login(loginState);
-  req.then(response => {
-    if (response.error) {
-      dispatch(loginError(response.error));
-      return;
-    }
-  });
-
-  // dispatch(loginSuccess(response));
-  // dispatch(setUIState(response.ui));
-  fetchSession()(dispatch);
-  history.push(URL_WS);
+  apiService
+    .login(loginState)
+    .then(() => {
+      fetchSession(history)(dispatch);
+      history.push(URL_WS);
+    })
+    .catch(err => {
+      dispatch(loginError(err));
+    });
 };
 
-export const logout = (history: any) => async (dispatch: Dispatch) => {
-  await apiService.logout();
-  history.push(URL_LOGIN);
-  dispatch({ type: LOGOUT });
+export const logout = (history: any) => (dispatch: Dispatch) => {
+  apiService.logout().finally(() => {
+    history.push(URL_LOGIN);
+    dispatch({ type: LOGOUT });
+  });
 };
