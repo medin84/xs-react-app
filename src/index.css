@@ -8,10 +8,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+/* body {
   background: #fff;
   font: 14px/1.5 Verdana, Arial, Helvetica, sans-serif;
-}
+} */
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",

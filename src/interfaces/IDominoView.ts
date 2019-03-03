@@ -48,3 +48,26 @@ export interface IPageable {
   next: boolean;
   page: number;
 }
+
+export interface IDominoParam {
+  database: string;
+  dbTitle: string;
+  viewName: string;
+  viewTitle: string;
+  indentValue: string;
+  readOnly: false;
+  selectEnabled: boolean;
+  multiSelect: boolean;
+  page: number;
+  rowCount: number;
+  searchQueryFilter: string;
+  topLevelEntryCount: number;
+  topStartPos: string;
+  topEndPos: string;
+  iconExt: string;
+  iconPath: string;
+  iconPrfx: string;
+  textIncorrectValue: string;
+  textNoEntries: string;
+  textNotCategorized: string;
+}

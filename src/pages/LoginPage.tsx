@@ -1,16 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Dispatch, bindActionCreators } from "redux";
-import { RouteComponentProps } from "react-router-dom";
 
 import { IApplicationState } from "../interfaces";
 import { login } from "../actions/user.actions";
-import Login, { LoginState } from "../components/Login";
+import Login, { LoginFormState } from "../components/Login";
 
-interface LoginPageProps extends RouteComponentProps {
-  title: string;
-  logo: string;
-  onSubmitLoginForm: (history: any, credentials: LoginState) => void;
+interface LoginPageProps extends IApplicationState {
+  onSubmitLoginForm: (credentials: LoginFormState) => void;
 }
 
 class LoginPage extends React.PureComponent<LoginPageProps> {
@@ -22,15 +19,18 @@ class LoginPage extends React.PureComponent<LoginPageProps> {
   };
 
   render() {
-    const { title, logo, history, onSubmitLoginForm } = this.props;
+    const {
+      ui: { title, logo },
+      onSubmitLoginForm
+    } = this.props;
 
     return (
       <Login
         title={title}
         logo={logo}
         i18n={this.i18n}
-        onSubmit={(credentials: LoginState) => {
-          onSubmitLoginForm(history, credentials);
+        onSubmit={(credentials: LoginFormState) => {
+          onSubmitLoginForm(credentials);
         }}
       />
     );

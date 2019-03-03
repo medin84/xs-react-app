@@ -1,20 +1,27 @@
 import React from "react";
+import { connect } from "react-redux";
 import { match, RouteComponentProps, withRouter } from "react-router-dom";
 import axios from "axios";
 
-import { IDominoView, IDominoViewColumn, IDominoViewRow } from "../interfaces";
+import {
+  IApplicationState,
+  IDominoView,
+  IDominoViewColumn,
+  IDominoViewRow,
+  IDominoParam
+} from "../interfaces";
 import { apiService } from "../api/api.service";
 import View from "../components/view/View";
 import { Pagination } from "../components/Pagination";
 
-interface ModulePageRouteProps extends RouteComponentProps {
+interface ModulePageRouteProps extends IApplicationState, RouteComponentProps {
   match: match<any>;
 }
 
 interface ModulePageRouteState {
   data: {
     view: IDominoView;
-    param: any;
+    param: IDominoParam;
   };
 }
 
@@ -37,14 +44,40 @@ class ViewContainer extends React.Component<
   }
 
   componentDidMount() {
-    const { pathname } = this.props.location;
+    console.log(this.props);
+
+    const { pathname, search } = this.props.location;
     this.historyListener = this.props.history.listen(location => {
       const isSameModule = pathname === location.pathname;
       if (isSameModule) {
         this.fetchView(location);
       }
+      // const params = new URLSearchParams(location.search);
+      // if (!params.get("view")) {
+      //   const dbid = params.get("dbid");
+      //   const entry = this.props.ui.sidenav.items.filter(
+      //     item => item.id === dbid
+      //   );
+      //   if (entry && entry[0].children) {
+      //     const url = entry[0].children[0].url + "&dbid=" + dbid;
+      //     this.props.history.push(`${pathname}?${url}`);
+      //   }
+      // }
     });
+
+    // const params = new URLSearchParams(this.props.location.search);
+    // if (!params.get("view")) {
+    //   const dbid = params.get("dbid");
+    //   const entry = this.props.ui.sidenav.items.filter(
+    //     item => item.id === dbid
+    //   );
+    //   if (entry && entry[0].children) {
+    //     const url = entry[0].children[0].url + "&dbid=" + dbid;
+    //     this.props.history.push(`${pathname}?${url}`);
+    //   }
+    // } else {
     this.fetchView(this.props.history.location);
+    //}
   }
 
   componentWillUnmount() {
@@ -53,6 +86,12 @@ class ViewContainer extends React.Component<
   }
 
   fetchView(location: any) {
+    // let { search } = location.search;
+    // const params = new URLSearchParams(search);
+    // if (!params.get("view")) {
+    //   return;
+    // }
+
     this.request && this.request.cancel();
     this.request = axios.CancelToken.source();
 
@@ -61,7 +100,7 @@ class ViewContainer extends React.Component<
       .getView(location.search, { cancelToken: this.request.token })
       .then(response => {
         this.setState({
-          data: response
+          data: response.data
         });
       })
       .catch(err => {
@@ -186,4 +225,10 @@ class ViewContainer extends React.Component<
   }
 }
 
-export default withRouter(ViewContainer);
+const mapStateToProps = (state: IApplicationState) => {
+  return {
+    ...state
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(ViewContainer));

@@ -3,7 +3,8 @@ import React from "react";
 import {
   IDominoView,
   IDominoViewColumn,
-  IDominoViewRow
+  IDominoViewRow,
+  IDominoParam
 } from "../../interfaces";
 import { ViewColgroup } from "./ViewColgroup";
 import ViewHead from "./ViewHead";
@@ -13,7 +14,7 @@ interface ViewProps {
   dbid: string;
   data: {
     view: IDominoView;
-    param: any;
+    param: IDominoParam;
   };
   selectedIds: string[];
   onDocumentHover: (row: IDominoViewRow) => void;

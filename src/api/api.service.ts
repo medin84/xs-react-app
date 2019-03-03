@@ -1,14 +1,18 @@
 import axios from "axios";
 
 import mockData from "./mockData";
-import { IApplicationState } from "../interfaces";
-import { URL_VIEW } from "../constants/UrlConstants";
-import { LoginState } from "../components/Login";
+import {
+  IApplicationState,
+  IApiResponse,
+  IApiViewResponse,
+  IApiDocumentResponse
+} from "../interfaces";
+import { LoginFormState } from "../components/Login";
 
-import InFormSchema from "./In";
-import KrFormSchema from "./Kr";
-import kiFormSchema from "./KI";
-import DefaultFormSchema from "./DefaultFormSchema";
+import InFormSchema from "./form-schema/in";
+import KrFormSchema from "./form-schema/kr";
+import kiFormSchema from "./form-schema/ki";
+import DefaultFormSchema from "./form-schema/default-schema";
 
 const context = "XSmart"; // window.location.pathname.split("/")[1];
 
@@ -20,9 +24,6 @@ const fetchSession = (): Promise<IApplicationState> => {
     })
     .then((resp: any) => {
       const modules = mockData.authSession.ui.sidenav.items;
-      modules.map(m => {
-        m.id = `${URL_VIEW}?dbid=${m.id}`;
-      });
 
       return {
         ui: {
@@ -31,6 +32,7 @@ const fetchSession = (): Promise<IApplicationState> => {
           logo: resp.logo,
           theme: resp.theme,
           langs: [],
+          navbarModuleSwitcherVisible: true,
           sidenav: {
             gamburger: true,
             open: true,
@@ -51,7 +53,7 @@ const fetchSession = (): Promise<IApplicationState> => {
     });
 };
 
-const login = (login: LoginState): Promise<any> => {
+const login = (login: LoginFormState): Promise<any> => {
   // const formData = new FormData();
   const params: any = { ...login };
   // Object.keys(params).map(key => {
@@ -78,10 +80,10 @@ const logout = (): Promise<any> => {
 };
 
 const _fetchSession = async (): Promise<IApplicationState> => {
-  return await Promise.resolve(mockData.authSession);
+  return await Promise.resolve(mockData.unAuthsession);
 };
 
-const _login = async (login: LoginState) => {
+const _login = async (login: LoginFormState) => {
   if (login.login == "developer") {
     return await Promise.resolve(mockData.authSession);
   }
@@ -97,7 +99,7 @@ const _logout = async () => {
 const getView = (
   query: string,
   params?: { cancelToken?: any }
-): Promise<any> => {
+): Promise<IApiResponse<IApiViewResponse>> => {
   return axios
     .get(`/${context}/api/view${query}`, params)
     .then(response => response.data);
@@ -113,7 +115,9 @@ const getDocuments = async (query: string) => {
   }).then(response => response.json());
 };
 
-const getDocument = async (query: string) => {
+const getDocument = async (
+  query: string
+): Promise<IApiResponse<IApiDocumentResponse>> => {
   return await fetch(`/${context}/api/document${query}`, {
     credentials: "include",
     method: "GET",

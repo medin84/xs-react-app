@@ -4,11 +4,12 @@ const sideNavItems: any[] = [];
 
 const authSession: IApplicationState = {
   ui: {
-    orgName: "mt",
+    orgName: "MT",
     title: "Title",
     logo: "/static/logo.png",
     theme: "cinzento",
     langs: [],
+    navbarModuleSwitcherVisible: true,
     sidenav: {
       gamburger: true,
       open: true,
@@ -29,11 +30,12 @@ const authSession: IApplicationState = {
 
 const unAuthsession: IApplicationState = {
   ui: {
-    orgName: "mt",
+    orgName: "MT",
     title: "Title",
     logo: "/static/logo.png",
     theme: "cinzento",
     langs: [],
+    navbarModuleSwitcherVisible: false,
     sidenav: {
       gamburger: true,
       open: true,

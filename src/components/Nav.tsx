@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 import { INavEntry } from "../interfaces";
-import { URL_VIEW } from "../constants/UrlConstants";
+import { URL_VIEW } from "../constants";
 
 interface NavProps {
   dbid: string;

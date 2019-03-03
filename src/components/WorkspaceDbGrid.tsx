@@ -1,6 +1,7 @@
 import React from "react";
-import { ModuleLinks } from "./ModuleLinks";
+
 import { INavEntry } from "../interfaces";
+import { ModuleLinks } from "./ModuleLinks";
 
 interface Props {
   modules: INavEntry[];

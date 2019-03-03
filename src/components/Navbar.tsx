@@ -1,53 +1,48 @@
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
 
 import { IApplicationState } from "../interfaces";
-import NavbarUserMenu from "./NavbarUserMenu";
-import NavbarModuleSwitcher from "./NavbarModuleSwitcher";
+import { NavbarUserMenu } from "./NavbarUserMenu";
+import { NavbarModuleSwitcher } from "./NavbarModuleSwitcher";
 
-interface NavbarProps extends IApplicationState, RouteComponentProps {
+interface NavbarProps extends IApplicationState {
   onSidenavToggle: () => void;
   onLogout: () => void;
 }
 
-class Navbar extends React.PureComponent<NavbarProps> {
-  render() {
-    const {
-      ui: { title, orgName, logo, sidenav },
-      onSidenavToggle,
-      onLogout
-    } = this.props;
+export function Navbar(props: NavbarProps) {
+  const {
+    ui: { title, orgName, logo, navbarModuleSwitcherVisible, sidenav },
+    onSidenavToggle,
+    onLogout
+  } = props;
 
-    return (
-      <>
-        <header className="navbar">
-          <div className="navbar__container container">
-            <div className="navbar-brand">
-              {sidenav.gamburger && (
-                <button
-                  className="btn-sidenav__toggle"
-                  type="button"
-                  onClick={onSidenavToggle}
-                />
-              )}
-              {logo && <img className="brand-logo" src={logo} />}
-              {(title || orgName) && (
-                <div className="brand-title">
-                  {title}
-                  <span className="brand-sub-title">{orgName}</span>
-                </div>
-              )}
-            </div>
+  return (
+    <>
+      <header className="navbar">
+        <div className="navbar__container container">
+          <div className="navbar-brand">
             {sidenav.gamburger && (
-              <NavbarModuleSwitcher modules={sidenav.items} />
+              <button
+                className="btn-sidenav__toggle"
+                type="button"
+                onClick={onSidenavToggle}
+              />
             )}
-            <NavbarUserMenu {...this.props} onLogout={onLogout} />
+            {logo && <img className="brand-logo" src={logo} />}
+            {(title || orgName) && (
+              <div className="brand-title">
+                {title}
+                <span className="brand-sub-title">{orgName}</span>
+              </div>
+            )}
           </div>
-        </header>
-        <div className="navbar__spacer" />
-      </>
-    );
-  }
+          {navbarModuleSwitcherVisible && (
+            <NavbarModuleSwitcher modules={sidenav.items} />
+          )}
+          <NavbarUserMenu {...props} onLogout={onLogout} />
+        </div>
+      </header>
+      <div className="navbar__spacer" />
+    </>
+  );
 }
-
-export default Navbar;

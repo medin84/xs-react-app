@@ -1,10 +1,9 @@
 import { Dispatch } from "redux";
 
-import { URL_LOGIN, URL_WS } from "../constants/UrlConstants";
 import { IApplicationState } from "../interfaces";
 import { setUIState } from "./ui.actions";
 import { apiService } from "../api/api.service";
-import { LoginState } from "../components/Login";
+import { LoginFormState } from "../components/Login";
 
 export const FETCH_SESSION = "FETCH_SESSION";
 export const FETCH_SESSION_SUCCESS = "FETCH_SESSION_SUCCESS";
@@ -35,36 +34,31 @@ const loginError = (error: any) => ({
   error
 });
 
-export const fetchSession = (history?: any) => async (dispatch: Dispatch) => {
+export const fetchSession = () => async (dispatch: Dispatch) => {
   await apiService
     .fetchSession()
     .then(response => {
       dispatch(fetchSessionSuccess(response));
       dispatch(setUIState(response.ui));
-      history && history.push(URL_WS);
     })
     .catch(err => {
       dispatch(fetchSessionFailure(err));
     });
 };
 
-export const login = (history: any, loginState: LoginState) => (
-  dispatch: Dispatch
-) => {
+export const login = (loginState: LoginFormState) => (dispatch: Dispatch) => {
   apiService
     .login(loginState)
     .then(() => {
-      fetchSession(history)(dispatch);
-      history.push(URL_WS);
+      fetchSession()(dispatch);
     })
     .catch(err => {
       dispatch(loginError(err));
     });
 };
 
-export const logout = (history: any) => (dispatch: Dispatch) => {
+export const logout = () => (dispatch: Dispatch) => {
   apiService.logout().finally(() => {
-    history.push(URL_LOGIN);
     dispatch({ type: LOGOUT });
   });
 };

@@ -11,16 +11,16 @@ interface LoginProps {
     remember: string;
     btnLogin: string;
   };
-  onSubmit: (state: LoginState) => void;
+  onSubmit: (state: LoginFormState) => void;
 }
 
-export interface LoginState {
+export interface LoginFormState {
   login: string;
   pwd: string;
   saveAuth: boolean;
 }
 
-class Login extends React.Component<LoginProps, LoginState> {
+class Login extends React.Component<LoginProps, LoginFormState> {
   constructor(props: LoginProps) {
     super(props);
 
@@ -42,7 +42,7 @@ class Login extends React.Component<LoginProps, LoginState> {
   onInputChange(e: any) {
     this.setState({
       [e.target.name]: [e.target.value]
-    } as Pick<LoginState, "login" | "pwd" | "saveAuth">);
+    } as Pick<LoginFormState, "login" | "pwd" | "saveAuth">);
   }
 
   render() {

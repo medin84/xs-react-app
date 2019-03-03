@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import {
   IDominoView,
   IDominoViewColumn,
-  IDominoViewRow
+  IDominoViewRow,
+  IDominoParam
 } from "../../interfaces";
-import { URL_DOCUMENT } from "../../constants/UrlConstants";
+import { URL_DOCUMENT } from "../../constants";
 import { Pagination } from "../Pagination";
 import { ButtonExpandableToggle } from "./ButtonExpandableToggle";
 import {
@@ -19,7 +20,7 @@ interface Props {
   dbid: string;
   data: {
     view: IDominoView;
-    param: any;
+    param: IDominoParam;
   };
   onDocumentHover: (row: IDominoViewRow) => void;
   onDocumentClick: (row: IDominoViewRow) => void;

@@ -1,6 +1,6 @@
-import { IFormElement } from "../interfaces";
+import { IFormElement } from "../../interfaces";
 
-const DefaultFormSchema: IFormElement[] = [
+const DefaultSchema: IFormElement[] = [
   {
     type: "actions",
     title: "",
@@ -59,4 +59,4 @@ const DefaultFormSchema: IFormElement[] = [
   }
 ];
 
-export default DefaultFormSchema;
+export default DefaultSchema;

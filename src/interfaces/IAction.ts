@@ -18,8 +18,6 @@ export interface IAction {
   className?: string;
   confirm?: PopUp;
   notify?: PopUp;
-  onSuccess?: IAction;
-  onError?: IAction;
 }
 
 export interface IActionPayload<T, P> {

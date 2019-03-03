@@ -3,16 +3,13 @@ import { HashRouter, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { Dispatch, bindActionCreators } from "redux";
 
-import { URL_WS, URL_LOGIN } from "../constants/UrlConstants";
+import { URL_WS } from "../constants";
 import { IApplicationState } from "../interfaces";
 import { fetchSession } from "../actions/user.actions";
-import { PrivateRoute } from "./PrivateRoute";
 import WorkspacePage from "../pages/WorkspacePage";
-import LoginPage from "../pages/LoginPage";
-import NoMatch from "../components/NoMatch";
 
 interface AppRouterProps extends IApplicationState {
-  fetchSession: (history?: any) => void;
+  fetchSession: () => void;
 }
 
 interface AppRouterState {
@@ -43,14 +40,7 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     return (
       <HashRouter>
         <Switch>
-          <Route exact path={URL_LOGIN} component={LoginPage} />
-          <PrivateRoute
-            authenticated={user.isAuthenticated}
-            redirectTo={URL_LOGIN}
-            path={URL_WS}
-            component={WorkspacePage}
-          />
-          <Route component={NoMatch} />
+          <Route path={URL_WS} component={WorkspacePage} />
         </Switch>
       </HashRouter>
     );

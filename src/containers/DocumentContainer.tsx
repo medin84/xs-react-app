@@ -56,11 +56,11 @@ class DocumentContainer extends React.Component<
   fetchDocument(location: any) {
     // const params = new URLSearchParams(location.search);
     apiService.getDocument(location.search).then(response => {
-      const { document } = response,
-        formSchema = apiService.getFormSchema(document.data["@form"]);
+      const { document } = response.data,
+        formSchema = apiService.getFormSchema(document["@form"]);
 
       this.setState({
-        document: document.data,
+        document: document,
         schema: formSchema
       });
     });

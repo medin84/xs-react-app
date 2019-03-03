@@ -1,4 +1,4 @@
-import { IFormElement } from "../interfaces";
+import { IFormElement } from "../../interfaces";
 
 const krSchema: IFormElement[] = [
   {
