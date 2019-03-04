@@ -43,3 +43,9 @@ code {
     margin: 6px 0;
   }
 }
+
+.view__sub-pagination > td {
+  background-color: #f6f6f6;
+  border-bottom-color: #999;
+  text-align: center;
+}

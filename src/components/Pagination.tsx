@@ -15,7 +15,7 @@ export function Pagination(props: Props) {
     <div className="pagination">
       <button
         type="button"
-        className="pagination__page -arrow -prev"
+        className={`pagination__page -arrow -prev ${prev ? "" : "-disabled"}`}
         disabled={!prev}
         onClick={() => {
           onChange(query, page - 1);
@@ -25,12 +25,12 @@ export function Pagination(props: Props) {
       </button>
       <div className="pagination__select">
         <div className="pagination__select_header">
-          {query} = <b>{page}</b>
+          Page <b>{page}</b>
         </div>
       </div>
       <button
         type="button"
-        className="pagination__page -arrow -next"
+        className={`pagination__page -arrow -next ${next ? "" : "-disabled"}`}
         disabled={!next}
         onClick={() => {
           onChange(query, page + 1);

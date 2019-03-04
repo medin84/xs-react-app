@@ -47,14 +47,24 @@ class ViewBody extends React.Component<Props, State> {
       return value;
     }
 
+    if (this.props.data.param.readOnly) {
+      return (
+        <span className="view__text" style={getCellStyle(column)}>
+          {value}
+        </span>
+      );
+    }
+
     return (
-      <Link
-        className="view__link"
-        style={getCellStyle(column)}
-        to={this.getDocumentLinkProps(unid)}
-      >
-        {value}
-      </Link>
+      <span className="view__text">
+        <Link
+          className="view__link"
+          style={getCellStyle(column)}
+          to={this.getDocumentLinkProps(unid)}
+        >
+          {value}
+        </Link>
+      </span>
     );
   }
 
@@ -150,6 +160,9 @@ class ViewBody extends React.Component<Props, State> {
           colSpan = 0;
 
           if (row.pageable) {
+            if (param.selectable) {
+              colCount++;
+            }
             return (
               <tr key={row.pageable.query} className="view__sub-pagination">
                 <td className="view__col" colSpan={colCount}>
@@ -166,6 +179,17 @@ class ViewBody extends React.Component<Props, State> {
               data-pos={row.pos}
               onMouseEnter={() => onDocumentHover(row)}
             >
+              {param.selectable && (
+                <th className="view__col view__col--select">
+                  <label className="view__select-label">
+                    <input
+                      type={param.multiSelect ? "checkbox" : "radio"}
+                      className="view__select-input"
+                      name="document"
+                    />
+                  </label>
+                </th>
+              )}
               {row.cells.map((value, index) => {
                 if (checkColSpan) {
                   // isLastRowCell = index + 1 === rowCellsCount;

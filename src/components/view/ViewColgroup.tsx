@@ -1,18 +1,20 @@
 import React from "react";
 
-import { IDominoViewColumn } from "../../interfaces";
+import { IDominoParam, IDominoViewColumn } from "../../interfaces";
 import { getColumnClassNames, getColumnStyle } from "./view.util";
 
 interface Props {
+  param: IDominoParam;
   columns: IDominoViewColumn[];
 }
 
 export function ViewColgroup(props: Props) {
-  const { columns } = props,
+  const { param, columns } = props,
     lastColIndex = columns.length - 1;
 
   return (
     <colgroup>
+      {param.selectable && <col className="view__col--select" />}
       {columns.map((column, index) => (
         <col
           className={getColumnClassNames(column)}

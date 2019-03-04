@@ -28,7 +28,9 @@ interface ViewProps {
 class View extends React.Component<ViewProps> {
   render() {
     const {
-      data: { view, param }
+      data: { view, param },
+      onChangeView,
+      onSort
     } = this.props;
     const hasRows = view.rows && view.rows.length > 0;
 
@@ -36,8 +38,13 @@ class View extends React.Component<ViewProps> {
       <div className="view">
         <div className="view__container">
           <table className="view-table">
-            <ViewColgroup columns={view.cols} />
-            <ViewHead {...this.props} columns={view.cols} />
+            <ViewColgroup param={param} columns={view.cols} />
+            <ViewHead
+              param={param}
+              columns={view.cols}
+              onChangeView={onChangeView}
+              onSort={onSort}
+            />
             {hasRows && <ViewBody {...this.props} />}
           </table>
           {!hasRows && (

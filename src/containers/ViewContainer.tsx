@@ -4,11 +4,10 @@ import { match, RouteComponentProps, withRouter } from "react-router-dom";
 import axios from "axios";
 
 import {
+  IApiViewResponse,
   IApplicationState,
-  IDominoView,
   IDominoViewColumn,
-  IDominoViewRow,
-  IDominoParam
+  IDominoViewRow
 } from "../interfaces";
 import { apiService } from "../api/api.service";
 import View from "../components/view/View";
@@ -19,10 +18,7 @@ interface ModulePageRouteProps extends IApplicationState, RouteComponentProps {
 }
 
 interface ModulePageRouteState {
-  data: {
-    view: IDominoView;
-    param: IDominoParam;
-  };
+  data: IApiViewResponse;
 }
 
 class ViewContainer extends React.Component<
@@ -86,18 +82,18 @@ class ViewContainer extends React.Component<
   }
 
   fetchView(location: any) {
-    // let { search } = location.search;
-    // const params = new URLSearchParams(search);
-    // if (!params.get("view")) {
-    //   return;
-    // }
+    let { search } = location;
+    const params = new URLSearchParams(search);
+    if (!params.get("view")) {
+      return;
+    }
 
     this.request && this.request.cancel();
     this.request = axios.CancelToken.source();
 
     // const params = new URLSearchParams(location.search);
     apiService
-      .getView(location.search, { cancelToken: this.request.token })
+      .getView(search, { cancelToken: this.request.token })
       .then(response => {
         this.setState({
           data: response.data
@@ -193,7 +189,7 @@ class ViewContainer extends React.Component<
     }
 
     const { match, location } = this.props;
-    const { view, param } = this.state.data;
+    const { actions, view, param } = this.state.data;
     const search = new URLSearchParams(location.search);
     const dbid = search.get("dbid") || "";
 
@@ -202,11 +198,13 @@ class ViewContainer extends React.Component<
         <header className="content-header">
           <h1 className="header-title">{param.viewTitle}</h1>
         </header>
-        <div className="content-actions">
-          {view.pageable && (
-            <Pagination {...view.pageable} onChange={this.handleChangePage} />
-          )}
-        </div>
+        {(actions || view.pageable) && (
+          <div className="content-actions">
+            {view.pageable && (
+              <Pagination {...view.pageable} onChange={this.handleChangePage} />
+            )}
+          </div>
+        )}
         <div className="content-body" style={{ padding: 0 }}>
           <View
             dbid={dbid}
