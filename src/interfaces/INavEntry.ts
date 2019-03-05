@@ -1,6 +1,7 @@
 export interface INavEntry {
   id: string;
   url: string;
+  defaultUrl?: string;
   caption: string;
   icon: string;
   count?: number;

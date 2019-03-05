@@ -1,6 +1,7 @@
 import React from "react";
 
 interface Props {
+  label?: string;
   query: string;
   prev: boolean;
   next: boolean;
@@ -9,7 +10,7 @@ interface Props {
 }
 
 export function Pagination(props: Props) {
-  const { query, prev, next, page, onChange } = props;
+  const { label = "Page", query, prev, next, page, onChange } = props;
 
   return (
     <div className="pagination">
@@ -25,7 +26,7 @@ export function Pagination(props: Props) {
       </button>
       <div className="pagination__select">
         <div className="pagination__select_header">
-          Page <b>{page}</b>
+          {label} <b>{page}</b>
         </div>
       </div>
       <button

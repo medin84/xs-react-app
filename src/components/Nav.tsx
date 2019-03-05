@@ -5,7 +5,6 @@ import { INavEntry } from "../interfaces";
 import { URL_VIEW } from "../constants";
 
 interface NavProps {
-  dbid: string;
   items: INavEntry[];
   expanded: string[];
   toggleCollapsible: (entry: INavEntry) => void;
@@ -18,7 +17,6 @@ interface NavState {
 class Nav extends React.Component<NavProps, NavState> {
   constructor(props: NavProps, state: NavState) {
     super(props, state);
-
     this.state = { toggle: true };
   }
 
@@ -40,25 +38,26 @@ class Nav extends React.Component<NavProps, NavState> {
     e.preventDefault();
     item.expanded = !item.expanded;
     this.setState({ toggle: item.expanded });
-    // this.props.toggleCollapsible(item);
+    this.props.toggleCollapsible(item);
   }
 
   renderNavLink(item: INavEntry) {
-    const search = new URLSearchParams(item.url);
-    search.set("dbid", this.props.dbid);
-
     return (
       <NavLink
         exact
-        to={{ pathname: URL_VIEW, search: `${search}` }}
+        to={{ pathname: URL_VIEW, search: item.url }}
         className="nav-link"
         activeClassName="active"
         isActive={(match, location) => {
-          // console.log(item.url, location.search);
-          const itemSearch = new URLSearchParams(item.url);
-          const locationSearch = new URLSearchParams(location.search);
-          return itemSearch.get("view") === locationSearch.get("view");
-          // return location.search.indexOf(item.url) != -1;
+          const itParam = new URLSearchParams(item.url),
+            locParam = new URLSearchParams(location.search),
+            itemDb = itParam.get("database");
+          const viewEq = itParam.get("view") === locParam.get("view");
+
+          if (itemDb) {
+            return viewEq && itemDb === locParam.get("database");
+          }
+          return viewEq && itParam.get("dbid") === locParam.get("dbid");
         }}
       >
         <i
@@ -83,9 +82,17 @@ class Nav extends React.Component<NavProps, NavState> {
   }
 
   render() {
-    const { items } = this.props;
+    const { items, expanded } = this.props;
     if (!items || !items.length) {
       return null;
+    }
+
+    if (expanded && expanded.length > 0) {
+      for (let item of items) {
+        if (expanded.indexOf(item.id) > -1) {
+          item.expanded = true;
+        }
+      }
     }
 
     return (

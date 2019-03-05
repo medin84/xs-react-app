@@ -6,12 +6,17 @@ import { IUserState } from "../interfaces";
 
 interface UserMenuProps {
   user: IUserState;
+  i18n: {
+    your_profile: string;
+    logout: string;
+  };
   onLogout: () => void;
 }
 
 export function NavbarUserMenu(props: UserMenuProps) {
   const {
     user: { displayMailLink, mailLink, name },
+    i18n,
     onLogout
   } = props;
 
@@ -42,7 +47,7 @@ export function NavbarUserMenu(props: UserMenuProps) {
               <Link to={URL_PROFILE} className="list__item user-profile">
                 <i className="list__item_icon fa fa-user-circle-o" />
                 <div className="list__item_content">
-                  your_profile
+                  {i18n.your_profile}
                   <div className="text-muted">{name}</div>
                 </div>
               </Link>
@@ -55,7 +60,9 @@ export function NavbarUserMenu(props: UserMenuProps) {
                 onClick={onLogout}
               >
                 <i className="list__item_icon fa fa-sign-out" />
-                <div className="list__item_content text-left">logout</div>
+                <div className="list__item_content text-left">
+                  {i18n.logout}
+                </div>
               </button>
             </li>
           </ul>

@@ -3,6 +3,7 @@ import React from "react";
 import { IApplicationState } from "../interfaces";
 import { NavbarUserMenu } from "./NavbarUserMenu";
 import { NavbarModuleSwitcher } from "./NavbarModuleSwitcher";
+import { NavbarSearch } from "./NavbarSearch";
 
 interface NavbarProps extends IApplicationState {
   onSidenavToggle: () => void;
@@ -11,10 +12,16 @@ interface NavbarProps extends IApplicationState {
 
 export function Navbar(props: NavbarProps) {
   const {
+    user,
     ui: { title, orgName, logo, navbarModuleSwitcherVisible, sidenav },
     onSidenavToggle,
     onLogout
   } = props;
+
+  const i18n = {
+    your_profile: "Profile",
+    logout: "Logout"
+  };
 
   return (
     <>
@@ -36,10 +43,11 @@ export function Navbar(props: NavbarProps) {
               </div>
             )}
           </div>
+          <NavbarSearch />
           {navbarModuleSwitcherVisible && (
             <NavbarModuleSwitcher modules={sidenav.items} />
           )}
-          <NavbarUserMenu {...props} onLogout={onLogout} />
+          <NavbarUserMenu user={user} i18n={i18n} onLogout={onLogout} />
         </div>
       </header>
       <div className="navbar__spacer" />

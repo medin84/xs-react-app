@@ -12,12 +12,14 @@ import {
 import { apiService } from "../api/api.service";
 import View from "../components/view/View";
 import { Pagination } from "../components/Pagination";
+import { LoadSpinner } from "../components/LoadSpinner";
 
 interface ModulePageRouteProps extends IApplicationState, RouteComponentProps {
   match: match<any>;
 }
 
 interface ModulePageRouteState {
+  loading: boolean;
   data: IApiViewResponse;
 }
 
@@ -40,7 +42,7 @@ class ViewContainer extends React.Component<
   }
 
   componentDidMount() {
-    console.log(this.props);
+    console.log(this.props, this.state);
 
     const { pathname, search } = this.props.location;
     this.historyListener = this.props.history.listen(location => {
@@ -91,19 +93,20 @@ class ViewContainer extends React.Component<
     this.request && this.request.cancel();
     this.request = axios.CancelToken.source();
 
+    this.setState(state => ({ ...state, loading: true }));
+
     // const params = new URLSearchParams(location.search);
     apiService
       .getView(search, { cancelToken: this.request.token })
       .then(response => {
         this.setState({
+          loading: false,
           data: response.data
         });
       })
       .catch(err => {
-        if (axios.isCancel(err)) {
-          console.log("Request canceled", err.message);
-        } else {
-          // handle error
+        if (!axios.isCancel(err)) {
+          this.setState(state => ({ ...state, loading: false }));
         }
       });
   }
@@ -186,6 +189,8 @@ class ViewContainer extends React.Component<
   render() {
     if (!this.state) {
       return null;
+    } else if (this.state.loading && !this.state.data) {
+      return <LoadSpinner />;
     }
 
     const { match, location } = this.props;
@@ -195,13 +200,18 @@ class ViewContainer extends React.Component<
 
     return (
       <>
+        {this.state.loading && <LoadSpinner />}
         <header className="content-header">
           <h1 className="header-title">{param.viewTitle}</h1>
         </header>
         {(actions || view.pageable) && (
           <div className="content-actions">
             {view.pageable && (
-              <Pagination {...view.pageable} onChange={this.handleChangePage} />
+              <Pagination
+                {...view.pageable}
+                label="Page"
+                onChange={this.handleChangePage}
+              />
             )}
           </div>
         )}

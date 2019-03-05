@@ -8,7 +8,8 @@ const ws: INavEntry = {
   id: URL_WS,
   caption: "Workspace",
   icon: "",
-  url: ""
+  url: "",
+  defaultUrl: URL_WS
 };
 
 interface NavbarModuleSwitcherProps {

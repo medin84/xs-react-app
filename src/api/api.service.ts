@@ -7,6 +7,8 @@ import {
   IApiViewResponse,
   IApiDocumentResponse
 } from "../interfaces";
+import { isMobile } from "../utils";
+import { loadState } from "../store/localeStorage";
 import { LoginFormState } from "../components/Login";
 
 import InFormSchema from "./form-schema/in";
@@ -24,6 +26,15 @@ const fetchSession = (): Promise<IApplicationState> => {
     })
     .then((resp: any) => {
       const modules = mockData.authSession.ui.sidenav.items;
+      let expandedIds: string[] = [];
+      let sidenavOpen = true;
+      const state = loadState();
+      if (state) {
+        try {
+          expandedIds = state.ui.sidenav.expanded;
+          sidenavOpen = state.ui.sidenav.open;
+        } catch (e) {}
+      }
 
       return {
         ui: {
@@ -32,12 +43,13 @@ const fetchSession = (): Promise<IApplicationState> => {
           logo: resp.logo,
           theme: resp.theme,
           langs: [],
+          isMobile: isMobile(),
           navbarModuleSwitcherVisible: true,
           sidenav: {
             gamburger: true,
-            open: true,
+            open: sidenavOpen,
             items: modules, // resp.sidenav ? resp.sidenav.items : []
-            expanded: []
+            expanded: expandedIds
           }
         },
         user: {
@@ -116,15 +128,17 @@ const getDocuments = async (query: string) => {
 };
 
 const getDocument = async (
-  query: string
+  query: string,
+  params?: { cancelToken?: any }
 ): Promise<IApiResponse<IApiDocumentResponse>> => {
-  return await fetch(`/${context}/api/document${query}`, {
-    credentials: "include",
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json;charset=UTF-8"
-    }
-  }).then(response => response.json());
+  return axios
+    .get(`/${context}/api/document${query}`, params)
+    .then(response => response.data)
+    .then(data => {
+      const _data: IApiResponse<IApiDocumentResponse> = data;
+      _data.data.schema = getFormSchema(_data.data.document["@form"]);
+      return _data;
+    });
 };
 
 const getFormSchema = (formName: string) => {

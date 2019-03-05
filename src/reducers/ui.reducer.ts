@@ -1,9 +1,10 @@
 import {
   UI_SET_STATE,
+  UI_MOBILE,
   UI_MODULE_SWITCHER_VISIBLE,
   UI_MODULE_SWITCHER_HIDDEN,
-  UI_SIDENAV_VISIBLE,
-  UI_SIDENAV_HIDDEN,
+  UI_SIDENAV_OPEN,
+  UI_SIDENAV_CLOSE,
   UI_TOGGLE_SIDENAV,
   UI_TOGGLE_COLLAPSIBLE_NAV_ENTRY
 } from "../actions/ui.actions";
@@ -20,6 +21,7 @@ const initialState: IUIState = {
   logo: "",
   theme: "",
   langs: [],
+  isMobile: false,
   navbarModuleSwitcherVisible: false,
   sidenav: {
     gamburger: true,
@@ -36,9 +38,8 @@ const ui = (state = initialState, action: any): IUIState => {
     case UI_SET_STATE:
       return { ...action.ui };
 
-    case UI_TOGGLE_SIDENAV:
-      sidenav = { ...state.sidenav, open: !state.sidenav.open };
-      return { ...state, sidenav };
+    case UI_MOBILE:
+      return { ...state, isMobile: action.isMobile };
 
     case UI_MODULE_SWITCHER_VISIBLE:
       return { ...state, navbarModuleSwitcherVisible: true };
@@ -46,11 +47,15 @@ const ui = (state = initialState, action: any): IUIState => {
     case UI_MODULE_SWITCHER_HIDDEN:
       return { ...state, navbarModuleSwitcherVisible: false };
 
-    case UI_SIDENAV_VISIBLE:
+    case UI_SIDENAV_OPEN:
       return { ...state, sidenav: { ...state.sidenav, open: true } };
 
-    case UI_SIDENAV_HIDDEN:
+    case UI_SIDENAV_CLOSE:
       return { ...state, sidenav: { ...state.sidenav, open: false } };
+
+    case UI_TOGGLE_SIDENAV:
+      sidenav = { ...state.sidenav, open: !state.sidenav.open };
+      return { ...state, sidenav };
 
     case UI_TOGGLE_COLLAPSIBLE_NAV_ENTRY:
       const entryIndex = state.sidenav.expanded.indexOf(action.entry.id),

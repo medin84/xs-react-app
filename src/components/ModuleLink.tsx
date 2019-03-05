@@ -2,19 +2,11 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 import { INavEntry } from "../interfaces";
-import { URL_WS, URL_VIEW } from "../constants";
 
 export function ModuleLink(module: INavEntry) {
-  let url;
-  if (module.id === URL_WS) {
-    url = URL_WS;
-  } else {
-    url = `${URL_VIEW}?dbid=${module.id}`;
-  }
-
   return (
     <NavLink
-      to={url}
+      to={module.defaultUrl || ""}
       activeClassName="-active"
       className="module-link ws-app-link"
     >

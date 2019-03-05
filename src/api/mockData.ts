@@ -9,6 +9,7 @@ const authSession: IApplicationState = {
     logo: "/static/logo.png",
     theme: "cinzento",
     langs: [],
+    isMobile: false,
     navbarModuleSwitcherVisible: true,
     sidenav: {
       gamburger: true,
@@ -35,6 +36,7 @@ const unAuthsession: IApplicationState = {
     logo: "/static/logo.png",
     theme: "cinzento",
     langs: [],
+    isMobile: false,
     navbarModuleSwitcherVisible: false,
     sidenav: {
       gamburger: true,

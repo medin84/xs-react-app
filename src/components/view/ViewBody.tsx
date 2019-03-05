@@ -180,15 +180,17 @@ class ViewBody extends React.Component<Props, State> {
               onMouseEnter={() => onDocumentHover(row)}
             >
               {param.selectable && (
-                <th className="view__col view__col--select">
-                  <label className="view__select-label">
-                    <input
-                      type={param.multiSelect ? "checkbox" : "radio"}
-                      className="view__select-input"
-                      name="document"
-                    />
-                  </label>
-                </th>
+                <td className="view__col view__col--select">
+                  {(row.type === "DOCUMENT" || row.type === "RESPONSE") && (
+                    <label className="view__select-label">
+                      <input
+                        type={param.multiSelect ? "checkbox" : "radio"}
+                        className="view__select-input"
+                        name="document"
+                      />
+                    </label>
+                  )}
+                </td>
               )}
               {row.cells.map((value, index) => {
                 if (checkColSpan) {

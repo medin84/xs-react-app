@@ -1,21 +1,24 @@
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
+import axios from "axios";
 
 import { apiService } from "../api/api.service";
 import { doActionRequest } from "../api/api-action.service";
-import { IFormElement, IAction, KeyValue } from "../interfaces";
+import { IApiDocumentResponse, IFormElement, IAction } from "../interfaces";
 import Form from "../components/form/Form";
+import { LoadSpinner } from "../components/LoadSpinner";
 
 interface DocumentState {
-  document: KeyValue<any>;
-  schema: IFormElement[];
+  loading: boolean;
+  data: IApiDocumentResponse;
 }
 
 class DocumentContainer extends React.Component<
   RouteComponentProps,
   DocumentState
 > {
-  unlisten: any;
+  historyListener: any;
+  request: any;
 
   constructor(props: any, state: DocumentState) {
     super(props, state);
@@ -25,7 +28,7 @@ class DocumentContainer extends React.Component<
   }
 
   componentDidMount() {
-    this.unlisten = this.props.history.listen(
+    this.historyListener = this.props.history.listen(
       (location: any, action: string) => {
         if (this.props.location.pathname === location.pathname) {
           this.fetchDocument(location);
@@ -36,7 +39,8 @@ class DocumentContainer extends React.Component<
   }
 
   componentWillUnmount() {
-    this.unlisten && this.unlisten();
+    this.historyListener && this.historyListener();
+    this.request && this.request.cancel();
   }
 
   handleAction(action: IAction): void {
@@ -47,39 +51,50 @@ class DocumentContainer extends React.Component<
 
   handleChange(field: IFormElement, newValue: any): void {
     if (field.name) {
-      this.state.document[field.name] = newValue;
+      this.state.data.document[field.name] = newValue;
     }
 
-    console.log("handleChange", field, newValue, this.state.document);
+    console.log("handleChange", field, newValue, this.state.data.document);
   }
 
   fetchDocument(location: any) {
-    // const params = new URLSearchParams(location.search);
-    apiService.getDocument(location.search).then(response => {
-      const { document } = response.data,
-        formSchema = apiService.getFormSchema(document["@form"]);
+    this.request && this.request.cancel();
+    this.request = axios.CancelToken.source();
 
-      this.setState({
-        document: document,
-        schema: formSchema
+    this.setState(state => ({ ...state, loading: true }));
+
+    // const params = new URLSearchParams(location.search);
+    apiService
+      .getDocument(location.search, { cancelToken: this.request.token })
+      .then(response => {
+        this.setState({ data: response.data, loading: false });
+      })
+      .catch(err => {
+        if (!axios.isCancel(err)) {
+          this.setState(state => ({ ...state, loading: false }));
+        }
       });
-    });
   }
 
   render() {
-    if (!this.state || !this.state.document) {
-      return <div>Loading...</div>;
+    if (!this.state) {
+      return null;
+    } else if (this.state.loading && !this.state.data) {
+      return <LoadSpinner />;
     }
 
-    const { schema, document } = this.state;
+    const { schema, document } = this.state.data;
 
     return (
-      <Form
-        data={document}
-        schema={schema}
-        onAction={this.handleAction}
-        onChange={this.handleChange}
-      />
+      <>
+        {this.state.loading && <LoadSpinner />}
+        <Form
+          data={document}
+          schema={schema}
+          onAction={this.handleAction}
+          onChange={this.handleChange}
+        />
+      </>
     );
   }
 }

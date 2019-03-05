@@ -6,6 +6,7 @@ export interface IUIState {
   logo: string;
   theme: string;
   langs: string[];
+  isMobile: boolean;
   navbarModuleSwitcherVisible: boolean;
   sidenav: {
     gamburger: boolean;

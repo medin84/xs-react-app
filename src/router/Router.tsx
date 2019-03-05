@@ -6,6 +6,7 @@ import { Dispatch, bindActionCreators } from "redux";
 import { URL_WS } from "../constants";
 import { IApplicationState } from "../interfaces";
 import { fetchSession } from "../actions/user.actions";
+import { LoadSpinner } from "../components/LoadSpinner";
 import WorkspacePage from "../pages/WorkspacePage";
 
 interface AppRouterProps extends IApplicationState {
@@ -19,23 +20,18 @@ interface AppRouterState {
 class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
   constructor(props: AppRouterProps, state: AppRouterState) {
     super(props, state);
-
     this.state = { loading: true };
   }
 
   async componentDidMount() {
     await this.props.fetchSession();
-    this.setState({
-      loading: false
-    });
+    this.setState({ loading: false });
   }
 
   render() {
     if (this.state.loading) {
-      return <div>loading...</div>;
+      return <LoadSpinner />;
     }
-
-    const { user } = this.props;
 
     return (
       <HashRouter>

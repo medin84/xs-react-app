@@ -20,7 +20,7 @@ export interface LoginFormState {
   saveAuth: boolean;
 }
 
-class Login extends React.Component<LoginProps, LoginFormState> {
+class Login extends React.PureComponent<LoginProps, LoginFormState> {
   constructor(props: LoginProps) {
     super(props);
 
