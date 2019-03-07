@@ -8,34 +8,53 @@ import { IApiDocumentResponse, IFormElement, IAction } from "../interfaces";
 import Form from "../components/form/Form";
 import { LoadSpinner } from "../components/LoadSpinner";
 
-interface DocumentState {
-  loading: boolean;
-  data: IApiDocumentResponse;
+interface Props extends RouteComponentProps {
+  embedded?: boolean;
+  query?: string;
 }
 
-class DocumentContainer extends React.Component<
-  RouteComponentProps,
-  DocumentState
-> {
+interface State {
+  loading: boolean;
+  data?: IApiDocumentResponse;
+}
+
+class DocumentContainer extends React.Component<Props, State> {
   historyListener: any;
   request: any;
 
-  constructor(props: any, state: DocumentState) {
+  constructor(props: Props, state: State) {
     super(props, state);
+
+    this.state = {
+      loading: false
+    };
 
     this.handleAction = this.handleAction.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
-    this.historyListener = this.props.history.listen(
-      (location: any, action: string) => {
-        if (this.props.location.pathname === location.pathname) {
-          this.fetchDocument(location);
-        }
+    if (this.props.embedded) {
+      if (this.props.query) {
+        this.fetchDocument(new URLSearchParams(this.props.query));
       }
-    );
-    this.fetchDocument(this.props.history.location);
+    } else {
+      const { pathname, search } = this.props.location;
+      this.fetchDocument(new URLSearchParams(search));
+
+      this.historyListener = this.props.history.listen(location => {
+        const isSamePath = pathname === location.pathname;
+        if (isSamePath) {
+          this.fetchDocument(new URLSearchParams(location.search));
+        }
+      });
+    }
+  }
+
+  componentWillReceiveProps() {
+    if (this.props.embedded && this.props.query) {
+      this.fetchDocument(new URLSearchParams(this.props.query));
+    }
   }
 
   componentWillUnmount() {
@@ -50,6 +69,10 @@ class DocumentContainer extends React.Component<
   }
 
   handleChange(field: IFormElement, newValue: any): void {
+    if (!this.state.data) {
+      return;
+    }
+
     if (field.name) {
       this.state.data.document[field.name] = newValue;
     }
@@ -57,15 +80,14 @@ class DocumentContainer extends React.Component<
     console.log("handleChange", field, newValue, this.state.data.document);
   }
 
-  fetchDocument(location: any) {
+  fetchDocument(params: URLSearchParams) {
     this.request && this.request.cancel();
     this.request = axios.CancelToken.source();
 
-    this.setState(state => ({ ...state, loading: true }));
+    this.setState({ loading: true });
 
-    // const params = new URLSearchParams(location.search);
     apiService
-      .getDocument(location.search, { cancelToken: this.request.token })
+      .getDocument(`?${params}`, { cancelToken: this.request.token })
       .then(response => {
         this.setState({ data: response.data, loading: false });
       })
@@ -77,13 +99,25 @@ class DocumentContainer extends React.Component<
   }
 
   render() {
-    if (!this.state) {
-      return null;
-    } else if (this.state.loading && !this.state.data) {
+    if (this.props.embedded && !this.props.query) {
+      return (
+        <div>
+          [DocumentContainer configuration error] > when embedded "query" is
+          required
+        </div>
+      );
+    }
+
+    const { loading, data } = this.state;
+    if (loading && !data) {
       return <LoadSpinner />;
     }
 
-    const { schema, document } = this.state.data;
+    if (!data) {
+      return null;
+    }
+
+    const { schema, document } = data;
 
     return (
       <>

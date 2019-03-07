@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { URL_PROFILE } from "../constants";
 import { IUserState } from "../interfaces";
-import { Dropdown, DropdownToggle, DropdownMenu } from "./dropdown";
+import { Dropdown, DropdownMenu, DropdownToggle } from "./dropdown";
 
 interface UserMenuProps {
   user: IUserState;

@@ -104,6 +104,7 @@ class WorkspacePage extends React.Component<WorkspaceProps, WorkspaceState> {
     this.setState({
       isSearchOpen: true
     });
+    window.dispatchEvent(new Event("click"));
   }
 
   handleSearchInputBlur() {
@@ -134,11 +135,12 @@ class WorkspacePage extends React.Component<WorkspaceProps, WorkspaceState> {
   }
 
   handleContentOverlayClick(e: any) {
-    e && e.preventDefault && e.preventDefault();
+    e && e.preventDefault();
     if (this.props.ui.isMobile) {
       this.props.setSidenavClose();
     }
     this.handleSearchInputBlur();
+    window.dispatchEvent(new Event("click"));
   }
 
   handleWindowResize(e: any) {
@@ -164,8 +166,8 @@ class WorkspacePage extends React.Component<WorkspaceProps, WorkspaceState> {
       <div className={this.getLayoutClassNames()}>
         <div
           className="content__overlay"
-          onMouseDown={this.handleContentOverlayClick}
-          onTouchStart={this.handleContentOverlayClick}
+          onClick={this.handleContentOverlayClick}
+          // onTouchStart={this.handleContentOverlayClick}
         />
         <div className="layout__container">
           <Navbar

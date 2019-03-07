@@ -1,7 +1,7 @@
 import React from "react";
 
 interface Props {
-  trigger?: "HOVER" | "CLICK" | null;
+  trigger?: "HOVER" | "CLICK" | "TOGGLE";
   isOpenClassName?: string;
   className?: string;
   children?: React.ReactNode;
@@ -68,14 +68,14 @@ function getContentPosition(el: HTMLDivElement | null): PositionState {
     };
   }
 
-  const clientRect = el.getBoundingClientRect(),
-    screenHeight = window.document.body.clientHeight,
-    screenWidthHalf =
-      window.document.body.clientWidth / DEFAULT_PROPS.posXDimension;
+  const body = window.document.body,
+    clientRect = el.getBoundingClientRect(),
+    screenHeightPart = body.clientHeight / DEFAULT_PROPS.posYDimension,
+    screenWidthPart = body.clientWidth / DEFAULT_PROPS.posXDimension;
 
   return {
-    isLeft: screenWidthHalf < clientRect.left,
-    isTop: clientRect.top > screenHeight / DEFAULT_PROPS.posYDimension
+    isLeft: screenWidthPart < clientRect.left,
+    isTop: screenHeightPart < clientRect.top
   };
 }
 
@@ -196,14 +196,13 @@ class Dropdown extends React.PureComponent<Props, State> {
   handleClick(props: { isToggle?: boolean; isContent?: boolean }) {
     if (props.isToggle) {
       if (this.isOpenByClick) {
-        this.isOpenByClick = false;
         this.setClose();
       } else {
         this.isOpenByClick = true;
         this.selfClick = true;
         this.setOpen();
       }
-    } else {
+    } else if (this.props.trigger !== "TOGGLE") {
       this.setClose();
     }
   }

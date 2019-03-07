@@ -49,9 +49,11 @@ export function NavbarSearch(props: Props) {
           <i className="icon-search fa fa-search" />
         </button>
       </form>
-      {/* <div className="navbar-search-popup">
-        <div className="navbar-search-result" />
-      </div> */}
+      {value && (
+        <div className="navbar-search-popup">
+          <div className="navbar-search-result">{value}</div>
+        </div>
+      )}
     </div>
   );
 }

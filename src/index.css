@@ -53,3 +53,7 @@ code {
 .navbar .user-menu {
   justify-content: center;
 }
+
+.dropdown-menu {
+  max-width: 100vw;
+}

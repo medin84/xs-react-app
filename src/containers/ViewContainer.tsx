@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { match, RouteComponentProps, withRouter } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import axios from "axios";
 
 import {
@@ -14,24 +14,30 @@ import View from "../components/view/View";
 import { Pagination } from "../components/Pagination";
 import { LoadSpinner } from "../components/LoadSpinner";
 
-interface ModulePageRouteProps extends IApplicationState, RouteComponentProps {
-  match: match<any>;
+interface Props extends IApplicationState, RouteComponentProps {
+  embedded?: boolean;
+  query?: string;
 }
 
-interface ModulePageRouteState {
+interface State {
   loading: boolean;
-  data: IApiViewResponse;
+  dbid: string;
+  query: string;
+  data?: IApiViewResponse;
 }
 
-class ViewContainer extends React.Component<
-  ModulePageRouteProps,
-  ModulePageRouteState
-> {
+class ViewContainer extends React.Component<Props, State> {
   historyListener: any;
   request: any;
 
-  constructor(props: ModulePageRouteProps, state: ModulePageRouteState) {
+  constructor(props: Props, state: State) {
     super(props, state);
+
+    this.state = {
+      loading: false,
+      query: props.location.search,
+      dbid: ""
+    };
 
     this.handleDocumentHover = this.handleDocumentHover.bind(this);
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
@@ -42,40 +48,27 @@ class ViewContainer extends React.Component<
   }
 
   componentDidMount() {
-    console.log(this.props, this.state);
-
-    const { pathname, search } = this.props.location;
-    this.historyListener = this.props.history.listen(location => {
-      const isSameModule = pathname === location.pathname;
-      if (isSameModule) {
-        this.fetchView(location);
+    if (this.props.embedded) {
+      if (this.props.query) {
+        this.fetchView(new URLSearchParams(this.props.query));
       }
-      // const params = new URLSearchParams(location.search);
-      // if (!params.get("view")) {
-      //   const dbid = params.get("dbid");
-      //   const entry = this.props.ui.sidenav.items.filter(
-      //     item => item.id === dbid
-      //   );
-      //   if (entry && entry[0].children) {
-      //     const url = entry[0].children[0].url + "&dbid=" + dbid;
-      //     this.props.history.push(`${pathname}?${url}`);
-      //   }
-      // }
-    });
+    } else {
+      const { pathname, search } = this.props.location;
+      this.fetchView(new URLSearchParams(search));
 
-    // const params = new URLSearchParams(this.props.location.search);
-    // if (!params.get("view")) {
-    //   const dbid = params.get("dbid");
-    //   const entry = this.props.ui.sidenav.items.filter(
-    //     item => item.id === dbid
-    //   );
-    //   if (entry && entry[0].children) {
-    //     const url = entry[0].children[0].url + "&dbid=" + dbid;
-    //     this.props.history.push(`${pathname}?${url}`);
-    //   }
-    // } else {
-    this.fetchView(this.props.history.location);
-    //}
+      this.historyListener = this.props.history.listen(location => {
+        const isSamePath = pathname === location.pathname;
+        if (isSamePath) {
+          this.fetchView(new URLSearchParams(location.search));
+        }
+      });
+    }
+  }
+
+  componentWillReceiveProps() {
+    if (this.props.embedded && this.props.query) {
+      this.doQuery(new URLSearchParams(this.props.query));
+    }
   }
 
   componentWillUnmount() {
@@ -83,9 +76,16 @@ class ViewContainer extends React.Component<
     this.request && this.request.cancel();
   }
 
-  fetchView(location: any) {
-    let { search } = location;
-    const params = new URLSearchParams(search);
+  doQuery(search: URLSearchParams) {
+    if (this.props.embedded) {
+      this.fetchView(search);
+    } else {
+      const { pathname } = this.props.location;
+      this.props.history.push(`${pathname}?${search}`);
+    }
+  }
+
+  fetchView(params: URLSearchParams) {
     if (!params.get("view")) {
       return;
     }
@@ -95,12 +95,15 @@ class ViewContainer extends React.Component<
 
     this.setState(state => ({ ...state, loading: true }));
 
-    // const params = new URLSearchParams(location.search);
+    const dbid = params.get("dbid") || "";
+
     apiService
-      .getView(search, { cancelToken: this.request.token })
+      .getView(`?${params}`, { cancelToken: this.request.token })
       .then(response => {
         this.setState({
           loading: false,
+          query: `?${params}`,
+          dbid: dbid,
           data: response.data
         });
       })
@@ -120,18 +123,16 @@ class ViewContainer extends React.Component<
   }
 
   handleExpandableClick(row: IDominoViewRow) {
-    let { search } = this.props.location;
-    const params = new URLSearchParams(search);
+    const params = new URLSearchParams(this.state.query);
     params.delete("collapse");
     params.delete("expand");
     params.set(row.expanded ? "collapse" : "expand", row.pos);
 
-    this.fetchView({ search: `?${params}` });
+    this.fetchView(params);
   }
 
   handleSort(column: IDominoViewColumn) {
-    const { pathname, search } = this.props.location,
-      params = new URLSearchParams(search);
+    const params = new URLSearchParams(this.state.query);
     let sortDirection = null;
 
     switch (column.sort) {
@@ -156,47 +157,52 @@ class ViewContainer extends React.Component<
         break;
     }
 
+    params.delete("page");
+    params.delete("sort");
+
     if (sortDirection) {
       params.set("sort", `${column.index},${sortDirection}`);
-    } else {
-      params.delete("sort");
     }
-    params.delete("page");
 
-    this.props.history.push(`${pathname}?${params}`);
+    this.doQuery(params);
   }
 
   handleChangeView(viewName: string) {
-    let { pathname, search } = this.props.location;
-    const params = new URLSearchParams(search);
+    const params = new URLSearchParams(this.state.query);
     params.set("view", viewName);
     params.delete("sort");
     params.delete("page");
 
-    this.props.history.push(`${pathname}?${params}`);
+    this.doQuery(params);
   }
 
   handleChangePage(parameter: string, page: number) {
-    console.log("handleChangePage", parameter, page);
-
-    let { pathname, search } = this.props.location;
-    const params = new URLSearchParams(search);
+    const params = new URLSearchParams(this.state.query);
     params.set(parameter, `${page}`);
 
-    this.props.history.push(`${pathname}?${params}`);
+    this.doQuery(params);
   }
 
   render() {
-    if (!this.state) {
-      return null;
-    } else if (this.state.loading && !this.state.data) {
+    if (this.props.embedded && !this.props.query) {
+      return (
+        <div>
+          [ViewContainer configuration error] > when embedded "query" is
+          required
+        </div>
+      );
+    }
+
+    const { loading, dbid, data } = this.state;
+    if (loading && !data) {
       return <LoadSpinner />;
     }
 
-    const { match, location } = this.props;
-    const { actions, view, param } = this.state.data;
-    const search = new URLSearchParams(location.search);
-    const dbid = search.get("dbid") || "";
+    if (!data) {
+      return null;
+    }
+
+    const { actions, view, param } = data;
 
     return (
       <>
@@ -218,7 +224,7 @@ class ViewContainer extends React.Component<
         <div className="content-body" style={{ padding: 0 }}>
           <View
             dbid={dbid}
-            data={this.state.data}
+            data={data}
             selectedIds={[]}
             onDocumentHover={this.handleDocumentHover}
             onDocumentClick={this.handleDocumentClick}
