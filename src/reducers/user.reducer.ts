@@ -5,9 +5,7 @@ import {
   LOGIN,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
-  LOGOUT,
-  FETCH_USER_PROFILE,
-  UPDATE_USER_PROFILE
+  LOGOUT
 } from "../actions/user.actions";
 import { IUserState } from "../interfaces";
 

@@ -12,8 +12,6 @@ export const LOGIN = "LOGIN";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILURE = "LOGIN_FAILURE";
 export const LOGOUT = "LOGOUT";
-export const FETCH_USER_PROFILE = "FETCH_USER_PROFILE";
-export const UPDATE_USER_PROFILE = "UPDATE_USER_PROFILE";
 
 const fetchSessionSuccess = (state: IApplicationState) => ({
   type: FETCH_SESSION_SUCCESS,

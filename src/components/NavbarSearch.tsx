@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 
-interface Props {}
+interface Props {
+  onFocus: () => void;
+  onBlur: () => void;
+  onSubmit: (value: string) => void;
+}
 
 export function NavbarSearch(props: Props) {
+  const [value, setValue] = useState("");
+  const { onFocus, onBlur, onSubmit } = props;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(value);
+  };
+
+  const handleReset = (e: React.FormEvent) => {
+    setValue("");
+  };
+
   return (
     <div className="navbar-search">
-      <form className="navbar-search-form">
+      <form
+        className="navbar-search-form"
+        onSubmit={handleSubmit}
+        onReset={handleReset}
+      >
         <button className="btn btn-close" type="button">
           <i className="icon-close">&times;</i>
         </button>
@@ -16,6 +36,10 @@ export function NavbarSearch(props: Props) {
             name="keyword"
             required={true}
             autoComplete="off"
+            value={value}
+            onChange={e => setValue(e.target.value)}
+            onFocus={() => onFocus()}
+            onBlur={() => onBlur()}
           />
           <button className="btn btn-reset" type="reset">
             <i className="icon-reset">&times;</i>

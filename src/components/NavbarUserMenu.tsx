@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { URL_PROFILE } from "../constants";
 import { IUserState } from "../interfaces";
+import { Dropdown, DropdownToggle, DropdownMenu } from "./dropdown";
 
 interface UserMenuProps {
   user: IUserState;
@@ -34,14 +35,14 @@ export function NavbarUserMenu(props: UserMenuProps) {
           </a>
         </div>
       )}
-      <div className="nav-item dropdown to-left">
-        <button className="dropdown-toggle no-arrow user-menu">
+      <Dropdown className="nav-item to-left">
+        <DropdownToggle className="no-arrow user-menu">
           <span className="icon-user">
             <i className="fa fa-user" />
           </span>
           <span className="navbar-user-name">{name}</span>
-        </button>
-        <div className="dropdown-menu">
+        </DropdownToggle>
+        <DropdownMenu>
           <ul className="list user-menu-list">
             <li>
               <Link to={URL_PROFILE} className="list__item user-profile">
@@ -66,8 +67,8 @@ export function NavbarUserMenu(props: UserMenuProps) {
               </button>
             </li>
           </ul>
-        </div>
-      </div>
+        </DropdownMenu>
+      </Dropdown>
     </>
   );
 }

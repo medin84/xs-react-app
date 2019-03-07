@@ -92,7 +92,7 @@ const logout = (): Promise<any> => {
 };
 
 const _fetchSession = async (): Promise<IApplicationState> => {
-  return await Promise.resolve(mockData.unAuthsession);
+  return await Promise.resolve(mockData.authSession);
 };
 
 const _login = async (login: LoginFormState) => {

@@ -42,12 +42,18 @@ interface WorkspaceProps extends IApplicationState, RouteComponentProps {
   onToggleCollapsibleSidenavEntry: (entry: INavEntry) => void;
 }
 
-class WorkspacePage extends React.Component<WorkspaceProps> {
+interface WorkspaceState {
+  isSearchOpen: boolean;
+}
+
+class WorkspacePage extends React.Component<WorkspaceProps, WorkspaceState> {
   windowResizeTimer: any;
   historyListener: any;
 
-  constructor(props: WorkspaceProps) {
-    super(props);
+  constructor(props: WorkspaceProps, state: WorkspaceState) {
+    super(props, state);
+    this.state = { isSearchOpen: false };
+
     this.handleLogout = this.handleLogout.bind(this);
     this.handleToggleCollapsibleSidenavEntry = this.handleToggleCollapsibleSidenavEntry.bind(
       this
@@ -82,13 +88,32 @@ class WorkspacePage extends React.Component<WorkspaceProps> {
       (location.pathname === URL_WS ? " workspace no-sidenav" : "") +
       (location.pathname === URL_PROFILE ? " no-sidenav" : "") +
       (ui.sidenav.open ? " sidenav-toggled" : " ") +
-      (ui.isMobile && ui.sidenav.open ? " show-content-overlay" : "")
+      (ui.isMobile && (ui.sidenav.open || this.state.isSearchOpen)
+        ? " show-content-overlay"
+        : "") +
+      (this.state.isSearchOpen ? " search-open" : " ")
     );
   }
 
   handleLogout() {
     this.props.onLogout();
     this.props.history.push(URL_LOGIN);
+  }
+
+  handleSearchInputFocus() {
+    this.setState({
+      isSearchOpen: true
+    });
+  }
+
+  handleSearchInputBlur() {
+    this.setState({
+      isSearchOpen: false
+    });
+  }
+
+  handleSearchSubmit(value: string) {
+    console.log("search", value);
   }
 
   handleToggleCollapsibleSidenavEntry(entry: INavEntry) {
@@ -109,9 +134,11 @@ class WorkspacePage extends React.Component<WorkspaceProps> {
   }
 
   handleContentOverlayClick(e: any) {
+    e && e.preventDefault && e.preventDefault();
     if (this.props.ui.isMobile) {
       this.props.setSidenavClose();
     }
+    this.handleSearchInputBlur();
   }
 
   handleWindowResize(e: any) {
@@ -141,7 +168,13 @@ class WorkspacePage extends React.Component<WorkspaceProps> {
           onTouchStart={this.handleContentOverlayClick}
         />
         <div className="layout__container">
-          <Navbar {...this.props} onLogout={this.handleLogout} />
+          <Navbar
+            {...this.props}
+            onSearchInputFocus={() => this.handleSearchInputFocus()}
+            onSearchInputBlur={() => this.handleSearchInputBlur()}
+            onSearchSubmit={(value: string) => this.handleSearchSubmit(value)}
+            onLogout={this.handleLogout}
+          />
           <section className="main">
             <div className="main__container container">
               {hasNav && (

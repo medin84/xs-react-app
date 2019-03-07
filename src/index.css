@@ -49,3 +49,7 @@ code {
   border-bottom-color: #999;
   text-align: center;
 }
+
+.navbar .user-menu {
+  justify-content: center;
+}

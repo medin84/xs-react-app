@@ -6,7 +6,7 @@ import FormElement from "./FormElement";
 interface FormProps {
   data: KeyValue<any>;
   schema: IFormElement[];
-  onAction?: (action: IAction) => void;
+  onAction: (action: IAction) => void;
   onChange?: (field: IFormElement, newValue: any) => void;
 }
 

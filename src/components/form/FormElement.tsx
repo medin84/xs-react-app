@@ -3,11 +3,12 @@ import React from "react";
 import { IFormElement, IAction, KeyValue } from "../../interfaces";
 import Fieldset from "./FormFieldset";
 import FormField from "./FormField";
+import Toolbar from "../Toolbar";
 
 interface FormProps {
   data: KeyValue<any>;
   schema: IFormElement[];
-  onAction?: (action: IAction) => void;
+  onAction: (action: IAction) => void;
   onChange?: (field: IFormElement, newValue: any) => void;
 }
 
@@ -19,15 +20,10 @@ class FormElement extends React.Component<FormProps, FormState> {
   renderActions(element: IFormElement) {
     return (
       <div className={element.className}>
-        {(element.actions || []).map(action => (
-          <button
-            className={`btn ${action.className}`}
-            type="button"
-            onClick={() => this.props.onAction && this.props.onAction(action)}
-          >
-            {action.caption}
-          </button>
-        ))}
+        <Toolbar
+          actions={element.actions || []}
+          onAction={this.props.onAction}
+        />
       </div>
     );
   }

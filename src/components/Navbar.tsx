@@ -7,6 +7,9 @@ import { NavbarSearch } from "./NavbarSearch";
 
 interface NavbarProps extends IApplicationState {
   onSidenavToggle: () => void;
+  onSearchInputFocus: () => void;
+  onSearchInputBlur: () => void;
+  onSearchSubmit: (value: string) => void;
   onLogout: () => void;
 }
 
@@ -15,6 +18,9 @@ export function Navbar(props: NavbarProps) {
     user,
     ui: { title, orgName, logo, navbarModuleSwitcherVisible, sidenav },
     onSidenavToggle,
+    onSearchInputFocus,
+    onSearchInputBlur,
+    onSearchSubmit,
     onLogout
   } = props;
 
@@ -43,7 +49,11 @@ export function Navbar(props: NavbarProps) {
               </div>
             )}
           </div>
-          <NavbarSearch />
+          <NavbarSearch
+            onFocus={onSearchInputFocus}
+            onBlur={onSearchInputBlur}
+            onSubmit={onSearchSubmit}
+          />
           {navbarModuleSwitcherVisible && (
             <NavbarModuleSwitcher modules={sidenav.items} />
           )}
