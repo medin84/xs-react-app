@@ -1,8 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+import config from "../config";
 import { INavEntry } from "../interfaces";
-import { URL_VIEW } from "../constants";
 
 interface NavProps {
   items: INavEntry[];
@@ -15,8 +15,8 @@ interface NavState {
 }
 
 class Nav extends React.Component<NavProps, NavState> {
-  constructor(props: NavProps, state: NavState) {
-    super(props, state);
+  constructor(props: NavProps) {
+    super(props);
     this.state = { toggle: true };
   }
 
@@ -45,7 +45,7 @@ class Nav extends React.Component<NavProps, NavState> {
     return (
       <NavLink
         exact
-        to={{ pathname: URL_VIEW, search: item.url }}
+        to={{ pathname: config.URL_VIEW, search: item.url }}
         className="nav-link"
         activeClassName="active"
         isActive={(match, location) => {

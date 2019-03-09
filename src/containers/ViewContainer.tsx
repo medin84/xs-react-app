@@ -10,6 +10,7 @@ import {
   IDominoViewRow
 } from "../interfaces";
 import { apiService } from "../api/api.service";
+import { assert } from "../utils";
 import View from "../components/view/View";
 import { Pagination } from "../components/Pagination";
 import { LoadSpinner } from "../components/LoadSpinner";
@@ -30,8 +31,8 @@ class ViewContainer extends React.Component<Props, State> {
   historyListener: any;
   request: any;
 
-  constructor(props: Props, state: State) {
-    super(props, state);
+  constructor(props: Props) {
+    super(props);
 
     this.state = {
       loading: false,
@@ -98,7 +99,7 @@ class ViewContainer extends React.Component<Props, State> {
     const dbid = params.get("dbid") || "";
 
     apiService
-      .getView(`?${params}`, { cancelToken: this.request.token })
+      .getView(params, { cancelToken: this.request.token })
       .then(response => {
         this.setState({
           loading: false,
@@ -132,7 +133,6 @@ class ViewContainer extends React.Component<Props, State> {
   }
 
   handleSort(column: IDominoViewColumn) {
-    const params = new URLSearchParams(this.state.query);
     let sortDirection = null;
 
     switch (column.sort) {
@@ -157,7 +157,10 @@ class ViewContainer extends React.Component<Props, State> {
         break;
     }
 
+    const params = new URLSearchParams(this.state.query);
     params.delete("page");
+    params.delete("collapse");
+    params.delete("expand");
     params.delete("sort");
 
     if (sortDirection) {
@@ -178,6 +181,8 @@ class ViewContainer extends React.Component<Props, State> {
 
   handleChangePage(parameter: string, page: number) {
     const params = new URLSearchParams(this.state.query);
+    params.delete("collapse");
+    params.delete("expand");
     params.set(parameter, `${page}`);
 
     this.doQuery(params);
@@ -185,11 +190,10 @@ class ViewContainer extends React.Component<Props, State> {
 
   render() {
     if (this.props.embedded && !this.props.query) {
-      return (
-        <div>
-          [ViewContainer configuration error] > when embedded "query" is
-          required
-        </div>
+      assert(
+        false,
+        `[ViewContainer props] > when embedded "query" is required`,
+        this.props
       );
     }
 
@@ -206,7 +210,7 @@ class ViewContainer extends React.Component<Props, State> {
 
     return (
       <>
-        {this.state.loading && <LoadSpinner />}
+        {loading && <LoadSpinner />}
         <header className="content-header">
           <h1 className="header-title">{param.viewTitle}</h1>
         </header>

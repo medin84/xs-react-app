@@ -11,9 +11,8 @@ interface FieldsetState {
 }
 
 class FormFieldset extends React.Component<FieldsetProps, FieldsetState> {
-  constructor(props: FieldsetProps, state: FieldsetState) {
-    super(props, state);
-
+  constructor(props: FieldsetProps) {
+    super(props);
     this.state = { expanded: true };
 
     this.handleToggleExpanded = this.handleToggleExpanded.bind(this);

@@ -1,10 +1,10 @@
 import React from "react";
 
-import { IFormElement, KeyValue } from "../../interfaces";
+import { IFormElement, IDocument } from "../../interfaces";
 
 interface FormFieldProps {
   schema: IFormElement;
-  data: KeyValue<any>;
+  data: IDocument<any>;
   onChange?: (field: IFormElement, newValue: any) => void;
 }
 
@@ -14,8 +14,9 @@ interface FormFieldState {
 }
 
 class FormField extends React.Component<FormFieldProps, FormFieldState> {
-  constructor(props: FormFieldProps, state: FormFieldState) {
-    super(props, state);
+  constructor(props: FormFieldProps) {
+    super(props);
+
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 

@@ -8,8 +8,8 @@ interface UserProfileState {
 }
 
 class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
-  constructor(props: UserProfileProps, state: UserProfileState) {
-    super(props, state);
+  constructor(props: UserProfileProps) {
+    super(props);
 
     this.state = {
       user: {

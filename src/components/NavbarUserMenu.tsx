@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { URL_PROFILE } from "../constants";
+import config from "../config";
 import { IUserState } from "../interfaces";
 import { Dropdown, DropdownMenu, DropdownToggle } from "./dropdown";
 
@@ -45,7 +45,7 @@ export function NavbarUserMenu(props: UserMenuProps) {
         <DropdownMenu>
           <ul className="list user-menu-list">
             <li>
-              <Link to={URL_PROFILE} className="list__item user-profile">
+              <Link to={config.URL_PROFILE} className="list__item user-profile">
                 <i className="list__item_icon fa fa-user-circle-o" />
                 <div className="list__item_content">
                   {i18n.your_profile}

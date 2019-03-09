@@ -25,7 +25,8 @@ const authSession: IApplicationState = {
     displayMailLink: true,
     token: "",
     mailFilePath: "",
-    mailLink: "/XSmart/mail"
+    mailLink: "",
+    error: null
   }
 };
 
@@ -52,7 +53,8 @@ const unAuthsession: IApplicationState = {
     displayMailLink: false,
     token: "",
     mailFilePath: "",
-    mailLink: ""
+    mailLink: "",
+    error: null
   }
 };
 

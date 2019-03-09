@@ -6,5 +6,5 @@ export * from "./IUserState";
 export * from "./IAction";
 export * from "./PopUp";
 export * from "./IFormSchema";
-export * from "./KeyValue";
+export * from "./IDocument";
 export * from "./IDominoView";

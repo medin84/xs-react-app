@@ -1,7 +1,7 @@
 import { IDominoView, IDominoParam } from "./IDominoView";
 import { IAction } from "./IAction";
 import { IFormElement } from "./IFormSchema";
-import { KeyValue } from "./KeyValue";
+import { IDocument } from "./IDocument";
 
 export interface IApiResponse<T> {
   status: string;
@@ -23,6 +23,6 @@ export interface IApiViewResponse {
 
 export interface IApiDocumentResponse {
   actions: IAction[];
-  document: KeyValue<any>;
+  document: IDocument<any>;
   schema: IFormElement[];
 }

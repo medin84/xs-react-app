@@ -7,10 +7,12 @@ const inSchema: IFormElement[] = [
     className: "content-actions",
     actions: [
       {
+        type: "CLOSE",
         id: "close",
         caption: "Close"
       },
       {
+        type: "ACTION",
         id: "save_close",
         caption: "Save & close",
         className: "btn-primary"
@@ -42,67 +44,67 @@ const inSchema: IFormElement[] = [
             type: "text",
             title: "Входящий",
             name: "Vn",
-            readOnly: true
+            readOnly: false
           },
           {
             type: "text",
             title: "Исходящий",
             name: "In",
-            readOnly: true
+            readOnly: false
           },
           {
             type: "text",
             title: "Откуда поступил",
             name: "Corr",
-            readOnly: true
+            readOnly: false
           },
           {
             type: "text",
             title: "Кому адресован",
             name: "Recipient",
-            readOnly: true
+            readOnly: false
           },
           {
             type: "text",
             title: "Вид доставки",
             name: "DeliveryType1",
-            readOnly: true
+            readOnly: false
           },
           {
             type: "text",
             title: "Тип документа",
             name: "Vid1",
-            readOnly: true
+            readOnly: false
           },
           {
             type: "text",
             title: "Краткое содержание",
             name: "BriefContent",
-            readOnly: true
+            readOnly: false
           },
           {
             type: "text",
             title: "Примечание",
             name: "Remark",
-            readOnly: true
+            readOnly: false
           },
           {
             type: "text",
             title: "Язык обращения",
             name: "Language",
-            readOnly: true
+            readOnly: false
           },
           {
             type: "text",
             title: "К-во листов/экз/прил",
             name: "Np",
-            readOnly: true
+            readOnly: false
           },
           {
             type: "text",
             title: "Срок исполнения",
             name: "CtrlDate",
-            readOnly: true
+            readOnly: false
           }
         ]
       }

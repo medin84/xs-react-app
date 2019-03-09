@@ -1,13 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import config from "../../config";
 import {
   IDominoView,
   IDominoViewColumn,
   IDominoViewRow,
   IDominoParam
 } from "../../interfaces";
-import { URL_DOCUMENT } from "../../constants";
 import { Pagination } from "../Pagination";
 import { ButtonExpandableToggle } from "./ButtonExpandableToggle";
 import {
@@ -35,7 +35,7 @@ interface State {
 class ViewBody extends React.Component<Props, State> {
   getDocumentLinkProps(unid: string) {
     return {
-      pathname: URL_DOCUMENT,
+      pathname: config.URL_DOCUMENT,
       search: `?dbid=${this.props.dbid}&database=${
         this.props.data.param.database
       }&document=${unid}`

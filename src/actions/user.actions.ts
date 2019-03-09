@@ -28,7 +28,7 @@ const loginSuccess = (state: IApplicationState) => ({
 });
 
 const loginError = (error: any) => ({
-  type: LOGIN_SUCCESS,
+  type: LOGIN_FAILURE,
   error
 });
 
@@ -36,8 +36,8 @@ export const fetchSession = () => async (dispatch: Dispatch) => {
   await apiService
     .fetchSession()
     .then(response => {
-      dispatch(fetchSessionSuccess(response));
       dispatch(setUIState(response.ui));
+      dispatch(fetchSessionSuccess(response));
     })
     .catch(err => {
       dispatch(fetchSessionFailure(err));

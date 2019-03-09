@@ -12,7 +12,16 @@ export const loadState = (): IApplicationState | undefined => {
 
 export const saveState = (state: IApplicationState) => {
   try {
-    const serializedState = JSON.stringify(state);
+    const savedState = {
+      // : IApplicationState
+      ui: {
+        sidenav: {
+          open: state.ui.sidenav.open,
+          expanded: state.ui.sidenav.expanded
+        }
+      }
+    };
+    const serializedState = JSON.stringify(savedState);
     localStorage.setItem("state", serializedState);
   } catch (err) {}
 };

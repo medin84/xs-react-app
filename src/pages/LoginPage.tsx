@@ -18,20 +18,24 @@ class LoginPage extends React.PureComponent<LoginPageProps> {
     btnLogin: "Login"
   };
 
-  render() {
-    const {
-      ui: { title, logo },
-      onSubmitLoginForm
-    } = this.props;
+  constructor(props: LoginPageProps) {
+    super(props);
 
+    this.handleLogin = this.handleLogin.bind(this);
+  }
+
+  handleLogin(credentials: LoginFormState) {
+    this.props.onSubmitLoginForm(credentials);
+  }
+
+  render() {
     return (
       <Login
-        title={title}
-        logo={logo}
+        title={this.props.ui.title}
+        logo={this.props.ui.logo}
+        error={this.props.user.error}
         i18n={this.i18n}
-        onSubmit={(credentials: LoginFormState) => {
-          onSubmitLoginForm(credentials);
-        }}
+        onSubmit={this.handleLogin}
       />
     );
   }

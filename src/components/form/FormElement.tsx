@@ -1,19 +1,19 @@
 import React from "react";
 
-import { IFormElement, IAction, KeyValue } from "../../interfaces";
+import { IFormElement, IAction, IDocument } from "../../interfaces";
 import Fieldset from "./FormFieldset";
 import FormField from "./FormField";
 import Toolbar from "../Toolbar";
 
 interface FormProps {
-  data: KeyValue<any>;
+  data: IDocument<any>;
   schema: IFormElement[];
   onAction: (action: IAction) => void;
   onChange?: (field: IFormElement, newValue: any) => void;
 }
 
 interface FormState {
-  data: KeyValue<any>;
+  data: IDocument<any>;
 }
 
 class FormElement extends React.Component<FormProps, FormState> {

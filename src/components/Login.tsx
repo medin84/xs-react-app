@@ -5,6 +5,7 @@ import "./styles/Login.css";
 interface LoginProps {
   title: string;
   logo: string;
+  error: string;
   i18n: {
     user: string;
     password: string;
@@ -46,7 +47,7 @@ class Login extends React.PureComponent<LoginProps, LoginFormState> {
   }
 
   render() {
-    const { title, logo, i18n } = this.props;
+    const { title, logo, error, i18n } = this.props;
 
     return (
       <div className="sign-in-page-container">
@@ -74,11 +75,16 @@ class Login extends React.PureComponent<LoginProps, LoginFormState> {
               />
             </div>
           </div>
+          {error && (
+            <div className="sign-in-form-row">
+              <div className="alert alert-danger">Login or pwd incorrect</div>
+            </div>
+          )}
           <div className="sign-in-form-action">
             <label>
               <input
                 type="checkbox"
-                name="saveauth"
+                name="saveAuth"
                 value="1"
                 onChange={this.onInputChange}
               />

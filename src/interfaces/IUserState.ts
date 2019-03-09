@@ -6,4 +6,5 @@ export interface IUserState {
   mailFilePath: string;
   mailLink: string;
   theme: string;
+  error: any;
 }

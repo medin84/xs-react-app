@@ -1,16 +1,16 @@
 import React from "react";
 
-import { URL_WS } from "../constants";
+import config from "../config";
 import { INavEntry } from "../interfaces";
 import { ModuleLinks } from "./ModuleLinks";
 import { Dropdown, DropdownToggle, DropdownMenu } from "./dropdown";
 
 const ws: INavEntry = {
-  id: URL_WS,
+  id: config.URL_WS,
   caption: "Workspace",
   icon: "",
   url: "",
-  defaultUrl: URL_WS
+  defaultUrl: config.URL_WS
 };
 
 interface NavbarModuleSwitcherProps {

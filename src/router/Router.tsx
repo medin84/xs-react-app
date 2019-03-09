@@ -1,25 +1,25 @@
 import React from "react";
-import { HashRouter, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { Dispatch, bindActionCreators } from "redux";
 
-import { URL_WS } from "../constants";
+import config from "../config";
 import { IApplicationState } from "../interfaces";
 import { fetchSession } from "../actions/user.actions";
 import { LoadSpinner } from "../components/LoadSpinner";
 import WorkspacePage from "../pages/WorkspacePage";
 
-interface AppRouterProps extends IApplicationState {
+interface Props extends IApplicationState {
   fetchSession: () => void;
 }
 
-interface AppRouterState {
+interface State {
   loading: boolean;
 }
 
-class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
-  constructor(props: AppRouterProps, state: AppRouterState) {
-    super(props, state);
+class AppRouter extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
     this.state = { loading: true };
   }
 
@@ -34,11 +34,11 @@ class AppRouter extends React.Component<AppRouterProps, AppRouterState> {
     }
 
     return (
-      <HashRouter>
+      <Router>
         <Switch>
-          <Route path={URL_WS} component={WorkspacePage} />
+          <Route path={config.URL_WS} component={WorkspacePage} />
         </Switch>
-      </HashRouter>
+      </Router>
     );
   }
 }

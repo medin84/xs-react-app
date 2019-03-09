@@ -3,14 +3,8 @@ import { connect } from "react-redux";
 import { bindActionCreators, Dispatch } from "redux";
 import { Route, RouteComponentProps, Switch } from "react-router-dom";
 
+import config from "../config";
 import { IApplicationState, INavEntry } from "../interfaces";
-import {
-  URL_WS,
-  URL_PROFILE,
-  URL_DOCUMENT,
-  URL_VIEW,
-  URL_LOGIN
-} from "../constants";
 import {
   setMobile,
   setModuleSwitcherVisible,
@@ -50,14 +44,11 @@ class WorkspacePage extends React.Component<WorkspaceProps, WorkspaceState> {
   windowResizeTimer: any;
   historyListener: any;
 
-  constructor(props: WorkspaceProps, state: WorkspaceState) {
-    super(props, state);
+  constructor(props: WorkspaceProps) {
+    super(props);
     this.state = { isSearchOpen: false };
 
     this.handleLogout = this.handleLogout.bind(this);
-    this.handleToggleCollapsibleSidenavEntry = this.handleToggleCollapsibleSidenavEntry.bind(
-      this
-    );
     this.handleContentOverlayClick = this.handleContentOverlayClick.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
   }
@@ -85,8 +76,8 @@ class WorkspacePage extends React.Component<WorkspaceProps, WorkspaceState> {
       "app-root is-ready layout " +
       ui.theme +
       (ui.isMobile ? " phone" : "") +
-      (location.pathname === URL_WS ? " workspace no-sidenav" : "") +
-      (location.pathname === URL_PROFILE ? " no-sidenav" : "") +
+      (location.pathname === config.URL_WS ? " workspace no-sidenav" : "") +
+      (location.pathname === config.URL_PROFILE ? " no-sidenav" : "") +
       (ui.sidenav.open ? " sidenav-toggled" : " ") +
       (ui.isMobile && (ui.sidenav.open || this.state.isSearchOpen)
         ? " show-content-overlay"
@@ -97,7 +88,7 @@ class WorkspacePage extends React.Component<WorkspaceProps, WorkspaceState> {
 
   handleLogout() {
     this.props.onLogout();
-    this.props.history.push(URL_LOGIN);
+    this.props.history.push(config.URL_LOGIN);
   }
 
   handleSearchInputFocus() {
@@ -115,23 +106,6 @@ class WorkspacePage extends React.Component<WorkspaceProps, WorkspaceState> {
 
   handleSearchSubmit(value: string) {
     console.log("search", value);
-  }
-
-  handleToggleCollapsibleSidenavEntry(entry: INavEntry) {
-    let cse = localStorage.getItem("CollapsibleSidenavEntries") || "";
-    let result: string = cse;
-    const entryIds = cse.split(",");
-    if (entry.expanded) {
-      entryIds.push(entry.id);
-      result = entryIds.join(",");
-    } else {
-      const index = entryIds.indexOf(entry.id);
-      if (index > -1) {
-        entryIds.splice(index, 1);
-        result = entryIds.join(",");
-      }
-    }
-    localStorage.setItem("CollapsibleSidenavEntries", result);
   }
 
   handleContentOverlayClick(e: any) {
@@ -167,7 +141,6 @@ class WorkspacePage extends React.Component<WorkspaceProps, WorkspaceState> {
         <div
           className="content__overlay"
           onClick={this.handleContentOverlayClick}
-          // onTouchStart={this.handleContentOverlayClick}
         />
         <div className="layout__container">
           <Navbar
@@ -191,18 +164,26 @@ class WorkspacePage extends React.Component<WorkspaceProps, WorkspaceState> {
                   <Switch>
                     <Route
                       exact
-                      path={URL_WS}
+                      path={config.URL_WS}
                       render={() => (
                         <WorkspaceDbGrid modules={ui.sidenav.items} />
                       )}
                     />
-                    <Route exact path={URL_PROFILE} component={UserProfile} />
                     <Route
                       exact
-                      path={URL_DOCUMENT}
+                      path={config.URL_PROFILE}
+                      component={UserProfile}
+                    />
+                    <Route
+                      exact
+                      path={config.URL_DOCUMENT}
                       component={DocumentContainer}
                     />
-                    <Route exact path={URL_VIEW} component={ViewContainer} />
+                    <Route
+                      exact
+                      path={config.URL_VIEW}
+                      component={ViewContainer}
+                    />
                     <Route component={Page404} />
                   </Switch>
                 </div>

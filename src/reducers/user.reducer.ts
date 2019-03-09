@@ -12,7 +12,7 @@ import { IUserState } from "../interfaces";
 interface IAction {
   type: string;
   user: IUserState;
-  loginError: any;
+  error: any;
 }
 
 const initialState: IUserState = {
@@ -22,7 +22,8 @@ const initialState: IUserState = {
   displayMailLink: false,
   mailFilePath: "",
   mailLink: "",
-  theme: ""
+  theme: "",
+  error: null
 };
 
 const user = (state = initialState, action: IAction): IUserState => {
@@ -43,7 +44,7 @@ const user = (state = initialState, action: IAction): IUserState => {
       return { ...action.user };
 
     case LOGIN_FAILURE:
-      return { initialState, ...action.loginError };
+      return { ...initialState, ...{ error: action.error } };
 
     case LOGOUT:
       return initialState;

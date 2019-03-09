@@ -2,9 +2,10 @@ import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import axios from "axios";
 
+import { IApiDocumentResponse, IFormElement, IAction } from "../interfaces";
 import { apiService } from "../api/api.service";
 import { doActionRequest } from "../api/api-action.service";
-import { IApiDocumentResponse, IFormElement, IAction } from "../interfaces";
+import { assert } from "../utils";
 import Form from "../components/form/Form";
 import { LoadSpinner } from "../components/LoadSpinner";
 
@@ -22,8 +23,8 @@ class DocumentContainer extends React.Component<Props, State> {
   historyListener: any;
   request: any;
 
-  constructor(props: Props, state: State) {
-    super(props, state);
+  constructor(props: Props) {
+    super(props);
 
     this.state = {
       loading: false
@@ -87,7 +88,7 @@ class DocumentContainer extends React.Component<Props, State> {
     this.setState({ loading: true });
 
     apiService
-      .getDocument(`?${params}`, { cancelToken: this.request.token })
+      .getDocument(params, { cancelToken: this.request.token })
       .then(response => {
         this.setState({ data: response.data, loading: false });
       })
@@ -100,11 +101,10 @@ class DocumentContainer extends React.Component<Props, State> {
 
   render() {
     if (this.props.embedded && !this.props.query) {
-      return (
-        <div>
-          [DocumentContainer configuration error] > when embedded "query" is
-          required
-        </div>
+      assert(
+        false,
+        `[DocumentContainer props] > when embedded "query" is required`,
+        this.props
       );
     }
 
@@ -121,7 +121,7 @@ class DocumentContainer extends React.Component<Props, State> {
 
     return (
       <>
-        {this.state.loading && <LoadSpinner />}
+        {loading && <LoadSpinner />}
         <Form
           data={document}
           schema={schema}

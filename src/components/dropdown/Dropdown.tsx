@@ -97,14 +97,16 @@ class Dropdown extends React.PureComponent<Props, State> {
   timeout: any;
   timeout2: any;
 
-  constructor(props: Props, state: State) {
-    super(props, state);
+  constructor(props: Props) {
+    super(props);
+
     this.state = {
       isOpen: false,
       isFocused: false,
       isLeft: false,
       isTop: false
     };
+
     this.ref = React.createRef();
     this.id = genId();
     this.isMouseHoverTrigger =
@@ -194,6 +196,10 @@ class Dropdown extends React.PureComponent<Props, State> {
   }
 
   handleClick(props: { isToggle?: boolean; isContent?: boolean }) {
+    if (!props.isContent && this.props.trigger === "HOVER") {
+      return;
+    }
+
     if (props.isToggle) {
       if (this.isOpenByClick) {
         this.setClose();

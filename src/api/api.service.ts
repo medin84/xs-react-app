@@ -1,7 +1,16 @@
 import axios from "axios";
 
+//
 import mockData from "./mockData";
+import InFormSchema from "./form-schema/in";
+import KrFormSchema from "./form-schema/kr";
+import kiFormSchema from "./form-schema/ki";
+import DefaultFormSchema from "./form-schema/default-schema";
+//
+import config from "../config";
 import {
+  IAction,
+  IDocument,
   IApplicationState,
   IApiResponse,
   IApiViewResponse,
@@ -11,16 +20,9 @@ import { isMobile } from "../utils";
 import { loadState } from "../store/localeStorage";
 import { LoginFormState } from "../components/Login";
 
-import InFormSchema from "./form-schema/in";
-import KrFormSchema from "./form-schema/kr";
-import kiFormSchema from "./form-schema/ki";
-import DefaultFormSchema from "./form-schema/default-schema";
-
-const context = "XSmart"; // window.location.pathname.split("/")[1];
-
 const fetchSession = (): Promise<IApplicationState> => {
   return axios
-    .get(`/${context}/session`)
+    .get(`${config.HOST}/session`)
     .then(response => {
       return response.data ? response.data : Object.create({});
     })
@@ -59,36 +61,92 @@ const fetchSession = (): Promise<IApplicationState> => {
           displayMailLink: resp.user ? resp.user.displayMailLink : false,
           mailFilePath: resp.user ? resp.user.mailFilePath : "",
           mailLink: resp.user ? resp.user.mailLink : "",
-          theme: resp.user ? resp.user.theme : ""
+          theme: resp.user ? resp.user.theme : "",
+          error: null
         }
       }; // as IApplicationState;
     });
 };
 
 const login = (login: LoginFormState): Promise<any> => {
-  // const formData = new FormData();
-  const params: any = { ...login };
-  // Object.keys(params).map(key => {
-  //   formData.set(key, params[key]);
-  // });
-  const searchParams = Object.keys(params)
-    .map(key => {
-      return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
-    })
-    .join("&");
+  const authCredentials = new URLSearchParams();
+  authCredentials.set("login", login.login);
+  authCredentials.set("pwd", login.pwd);
+  authCredentials.set("saveauth", login.saveAuth ? "1" : "");
 
   return axios({
-    url: `/${context}/Login`,
+    url: `${config.HOST}/Login`,
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     },
-    data: searchParams
+    data: authCredentials
   });
 };
 
 const logout = (): Promise<any> => {
-  return axios.post(`/${context}/Logout`);
+  return axios.post(`${config.HOST}/Logout`);
+};
+
+const getView = (
+  search: URLSearchParams,
+  params?: { cancelToken?: any }
+): Promise<IApiResponse<IApiViewResponse>> => {
+  return axios
+    .get(`${config.API_HOST}/view?${search}`, params)
+    .then(response => response.data);
+};
+
+const getDocuments = (
+  search: URLSearchParams,
+  params?: { cancelToken?: any }
+): Promise<IApiResponse<IApiViewResponse>> => {
+  return axios
+    .get(`${config.API_HOST}/documents?${search}`, params)
+    .then(response => response.data);
+};
+
+const getDocument = (
+  search: URLSearchParams,
+  params?: { cancelToken?: any }
+): Promise<IApiResponse<IApiDocumentResponse>> => {
+  return axios
+    .get(`${config.API_HOST}/document?${search}`, params)
+    .then(response => response.data)
+    .then(data => {
+      const _data: IApiResponse<IApiDocumentResponse> = data;
+      _data.data.schema = getFormSchema(_data.data.document["@form"]);
+      return _data;
+    });
+};
+
+const doAction = (
+  action: IAction,
+  documents: IDocument<any>[]
+): Promise<IApiResponse<IApiDocumentResponse>> => {
+  return axios
+    .post(`${config.API_HOST}`, {
+      data: {
+        method: action.id,
+        id: action.id,
+        params: documents
+      }
+    })
+    .then(response => response.data);
+};
+
+////////////
+const getFormSchema = (formName: string) => {
+  switch (formName) {
+    case "IN":
+      return InFormSchema;
+    case "KR":
+      return KrFormSchema;
+    case "KI":
+      return kiFormSchema;
+    default:
+      return DefaultFormSchema;
+  }
 };
 
 const _fetchSession = async (): Promise<IApplicationState> => {
@@ -107,59 +165,12 @@ const _logout = async () => {
     return response;
   });
 };
-
-const getView = (
-  query: string,
-  params?: { cancelToken?: any }
-): Promise<IApiResponse<IApiViewResponse>> => {
-  return axios
-    .get(`/${context}/api/view${query}`, params)
-    .then(response => response.data);
-};
-
-const getDocuments = async (query: string) => {
-  return await fetch(`/${context}/api/documents${query}`, {
-    credentials: "include",
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json;charset=UTF-8"
-    }
-  }).then(response => response.json());
-};
-
-const getDocument = async (
-  query: string,
-  params?: { cancelToken?: any }
-): Promise<IApiResponse<IApiDocumentResponse>> => {
-  return axios
-    .get(`/${context}/api/document${query}`, params)
-    .then(response => response.data)
-    .then(data => {
-      const _data: IApiResponse<IApiDocumentResponse> = data;
-      _data.data.schema = getFormSchema(_data.data.document["@form"]);
-      return _data;
-    });
-};
-
-const getFormSchema = (formName: string) => {
-  switch (formName) {
-    case "IN":
-      return InFormSchema;
-    case "KR":
-      return KrFormSchema;
-    case "KI":
-      return kiFormSchema;
-    default:
-      return DefaultFormSchema;
-  }
-};
-
-const isEnvProduction = process.env.NODE_ENV === "production";
+////////////
 
 export const apiService = {
-  fetchSession: isEnvProduction ? fetchSession : _fetchSession,
-  login: isEnvProduction ? login : _login,
-  logout: isEnvProduction ? logout : _logout,
+  fetchSession: config.isEnvProduction ? fetchSession : _fetchSession,
+  login: config.isEnvProduction ? login : _login,
+  logout: config.isEnvProduction ? logout : _logout,
   getView,
   getDocuments,
   getDocument,
