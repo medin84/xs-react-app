@@ -2,26 +2,7 @@ import { IFormElement } from "../../interfaces";
 
 const inSchema: IFormElement[] = [
   {
-    type: "actions",
-    title: "",
-    className: "content-actions",
-    actions: [
-      {
-        type: "CLOSE",
-        id: "close",
-        caption: "Close"
-      },
-      {
-        type: "ACTION",
-        id: "save_close",
-        caption: "Save & close",
-        className: "btn-primary"
-      }
-    ]
-  },
-  {
     type: "block",
-    title: "",
     className: "content-header",
     children: [
       {
@@ -33,7 +14,6 @@ const inSchema: IFormElement[] = [
   },
   {
     type: "block",
-    title: "",
     className: "content-body",
     children: [
       {

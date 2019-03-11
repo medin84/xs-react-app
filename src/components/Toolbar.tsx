@@ -15,9 +15,9 @@ function ActionButton(props: {
   return (
     <button
       type="button"
-      className={`btn b-toolbar__btn ${props.action.className} ${
-        props.action.disabled ? "disabled" : ""
-      }`}
+      className={`btn b-toolbar__btn ${
+        props.action.primary ? "btn-primary" : ""
+      } ${props.action.disabled ? "disabled" : ""}`}
       disabled={props.action.disabled}
       onClick={() => props.onClick(props.action)}
     >
@@ -56,16 +56,12 @@ function DropdownToolbarActions(props: Props): React.ReactElement {
   );
 }
 
-class Toolbar extends React.Component<Props> {
+export class Toolbar extends React.Component<Props> {
   // const { navItems, expanded, toggleCollapsible } = props;
 
   render() {
-    const inlineActions: IAction[] = [
-        ...this.props.actions,
-        ...this.props.actions,
-        ...this.props.actions
-      ],
-      dropdownActions: IAction[] = inlineActions,
+    const inlineActions: IAction[] = this.props.actions,
+      dropdownActions: IAction[] = [],
       onAction = this.props.onAction;
 
     return (
@@ -81,14 +77,14 @@ class Toolbar extends React.Component<Props> {
               </div>
             );
           })}
-          <DropdownToolbarActions
-            actions={dropdownActions}
-            onAction={onAction}
-          />
+          {dropdownActions.length > 0 && (
+            <DropdownToolbarActions
+              actions={dropdownActions}
+              onAction={onAction}
+            />
+          )}
         </div>
       </div>
     );
   }
 }
-
-export default Toolbar;

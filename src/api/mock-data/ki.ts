@@ -2,24 +2,7 @@ import { IFormElement } from "../../interfaces";
 
 const kiSchema: IFormElement[] = [
   {
-    type: "actions",
-    title: "",
-    className: "content-actions",
-    actions: [
-      {
-        id: "close",
-        caption: "Close"
-      },
-      {
-        id: "save_close",
-        caption: "Save & close",
-        className: "btn-primary"
-      }
-    ]
-  },
-  {
     type: "block",
-    title: "",
     className: "content-header",
     children: [
       {
@@ -31,7 +14,6 @@ const kiSchema: IFormElement[] = [
   },
   {
     type: "block",
-    title: "",
     className: "content-body",
     children: [
       {

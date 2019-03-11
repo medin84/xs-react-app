@@ -1,4 +1,4 @@
-import { IApplicationState } from "../interfaces";
+import { IApplicationState } from "../../interfaces";
 
 const sideNavItems: any[] = [];
 
@@ -25,7 +25,7 @@ const authSession: IApplicationState = {
     displayMailLink: true,
     token: "",
     mailFilePath: "",
-    mailLink: "",
+    mailLink: "/XSmart/mail",
     error: null
   }
 };

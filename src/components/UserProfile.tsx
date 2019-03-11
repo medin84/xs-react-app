@@ -1,14 +1,14 @@
 import React from "react";
 
-interface UserProfileProps {}
+interface Props {}
 
-interface UserProfileState {
+interface State {
   user: any;
   langs: string[];
 }
 
-class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
-  constructor(props: UserProfileProps) {
+export class UserProfile extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -110,5 +110,3 @@ class UserProfile extends React.Component<UserProfileProps, UserProfileState> {
     );
   }
 }
-
-export default UserProfile;

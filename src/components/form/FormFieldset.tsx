@@ -2,16 +2,16 @@ import React from "react";
 
 import { IFormElement } from "../../interfaces";
 
-interface FieldsetProps {
+interface Props {
   schema: IFormElement;
 }
 
-interface FieldsetState {
+interface State {
   expanded: boolean;
 }
 
-class FormFieldset extends React.Component<FieldsetProps, FieldsetState> {
-  constructor(props: FieldsetProps) {
+export class FormFieldset extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = { expanded: true };
 
@@ -49,5 +49,3 @@ class FormFieldset extends React.Component<FieldsetProps, FieldsetState> {
     );
   }
 }
-
-export default FormFieldset;

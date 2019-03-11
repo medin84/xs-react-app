@@ -1,11 +1,11 @@
 import axios from "axios";
 
 //
-import mockData from "./mockData";
-import InFormSchema from "./form-schema/in";
-import KrFormSchema from "./form-schema/kr";
-import kiFormSchema from "./form-schema/ki";
-import DefaultFormSchema from "./form-schema/default-schema";
+import mockData from "./mock-data/session";
+import InFormSchema from "./mock-data/in";
+import KrFormSchema from "./mock-data/kr";
+import kiFormSchema from "./mock-data/ki";
+import DefaultFormSchema from "./mock-data/default-schema";
 //
 import config from "../config";
 import {
@@ -94,7 +94,18 @@ const getView = (
 ): Promise<IApiResponse<IApiViewResponse>> => {
   return axios
     .get(`${config.API_HOST}/view?${search}`, params)
-    .then(response => response.data);
+    .then(response => response.data)
+    .then(data => {
+      const _data: IApiResponse<IApiViewResponse> = data;
+      _data.data.actions = [
+        {
+          type: "RELOAD",
+          id: "RELOAD",
+          icon: "fa fa-refresh"
+        }
+      ];
+      return _data;
+    });
 };
 
 const getDocuments = (
@@ -120,17 +131,16 @@ const getDocument = (
     });
 };
 
-const doAction = (
+const doDocumentsActionRequest = (
   action: IAction,
-  documents: IDocument<any>[]
+  documents: IDocument<any>[],
+  payload: any
 ): Promise<IApiResponse<IApiDocumentResponse>> => {
   return axios
     .post(`${config.API_HOST}`, {
-      data: {
-        method: action.id,
-        id: action.id,
-        params: documents
-      }
+      method: action.id,
+      id: action.id,
+      params: { documents, payload }
     })
     .then(response => response.data);
 };
@@ -174,5 +184,5 @@ export const apiService = {
   getView,
   getDocuments,
   getDocument,
-  getFormSchema
+  doDocumentsActionRequest
 };

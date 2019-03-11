@@ -2,19 +2,19 @@ import React from "react";
 
 import { IFormElement, IDocument } from "../../interfaces";
 
-interface FormFieldProps {
+interface Props {
   schema: IFormElement;
   data: IDocument<any>;
   onChange?: (field: IFormElement, newValue: any) => void;
 }
 
-interface FormFieldState {
+interface State {
   type: string;
   value: any;
 }
 
-class FormField extends React.Component<FormFieldProps, FormFieldState> {
-  constructor(props: FormFieldProps) {
+export class FormField extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -102,5 +102,3 @@ class FormField extends React.Component<FormFieldProps, FormFieldState> {
     );
   }
 }
-
-export default FormField;

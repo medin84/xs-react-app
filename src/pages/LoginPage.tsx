@@ -4,7 +4,7 @@ import { Dispatch, bindActionCreators } from "redux";
 
 import { IApplicationState } from "../interfaces";
 import { login } from "../actions/user.actions";
-import Login, { LoginFormState } from "../components/Login";
+import { Login, LoginFormState } from "../components/Login";
 
 interface LoginPageProps extends IApplicationState {
   onSubmitLoginForm: (credentials: LoginFormState) => void;

@@ -4,9 +4,9 @@ import axios from "axios";
 
 import { IApiDocumentResponse, IFormElement, IAction } from "../interfaces";
 import { apiService } from "../api/api.service";
-import { doActionRequest } from "../api/api-action.service";
 import { assert } from "../utils";
-import Form from "../components/form/Form";
+import { FormElement } from "../components/form/FormElement";
+import { Toolbar } from "../components/Toolbar";
 import { LoadSpinner } from "../components/LoadSpinner";
 
 interface Props extends RouteComponentProps {
@@ -16,7 +16,7 @@ interface Props extends RouteComponentProps {
 
 interface State {
   loading: boolean;
-  data?: IApiDocumentResponse;
+  data: IApiDocumentResponse;
 }
 
 class DocumentContainer extends React.Component<Props, State> {
@@ -25,10 +25,6 @@ class DocumentContainer extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-
-    this.state = {
-      loading: false
-    };
 
     this.handleAction = this.handleAction.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -66,7 +62,21 @@ class DocumentContainer extends React.Component<Props, State> {
   handleAction(action: IAction): void {
     console.log("handleAction", action);
 
-    // doActionRequest(action.url);
+    switch (action.type) {
+      case "CLOSE":
+      case "BACK":
+        this.props.history.goBack();
+        break;
+      case "ACTION":
+        apiService.doDocumentsActionRequest(
+          action,
+          [this.state.data.document],
+          {}
+        );
+        break;
+      default:
+        break;
+    }
   }
 
   handleChange(field: IFormElement, newValue: any): void {
@@ -108,27 +118,36 @@ class DocumentContainer extends React.Component<Props, State> {
       );
     }
 
+    if (!this.state) {
+      return null;
+    }
+
     const { loading, data } = this.state;
     if (loading && !data) {
       return <LoadSpinner />;
     }
 
-    if (!data) {
-      return null;
-    }
-
-    const { schema, document } = data;
+    const { actions, schema, document } = data;
 
     return (
-      <>
-        {loading && <LoadSpinner />}
-        <Form
-          data={document}
-          schema={schema}
-          onAction={this.handleAction}
-          onChange={this.handleChange}
-        />
-      </>
+      <div className="form">
+        <div className="form__container">
+          {loading && <LoadSpinner />}
+          {actions && (
+            <div className="content-actions">
+              <div className="content-actions__container">
+                <Toolbar actions={actions} onAction={this.handleAction} />
+              </div>
+            </div>
+          )}
+          <FormElement
+            data={document}
+            schema={schema}
+            onAction={this.handleAction}
+            onChange={this.handleChange}
+          />
+        </div>
+      </div>
     );
   }
 }

@@ -4,6 +4,7 @@ import { RouteComponentProps, withRouter } from "react-router-dom";
 import axios from "axios";
 
 import {
+  IAction,
   IApiViewResponse,
   IApplicationState,
   IDominoViewColumn,
@@ -12,6 +13,7 @@ import {
 import { apiService } from "../api/api.service";
 import { assert } from "../utils";
 import View from "../components/view/View";
+import { Toolbar } from "../components/Toolbar";
 import { Pagination } from "../components/Pagination";
 import { LoadSpinner } from "../components/LoadSpinner";
 
@@ -40,6 +42,7 @@ class ViewContainer extends React.Component<Props, State> {
       dbid: ""
     };
 
+    this.handleAction = this.handleAction.bind(this);
     this.handleDocumentHover = this.handleDocumentHover.bind(this);
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
     this.handleExpandableClick = this.handleExpandableClick.bind(this);
@@ -188,6 +191,27 @@ class ViewContainer extends React.Component<Props, State> {
     this.doQuery(params);
   }
 
+  doRefreshView() {
+    const params = new URLSearchParams(this.state.query);
+    params.delete("collapse");
+    params.delete("expand");
+    this.doQuery(params);
+  }
+
+  handleAction(action: IAction): void {
+    console.log("handleAction", action);
+
+    switch (action.type) {
+      case "RELOAD":
+        this.doRefreshView();
+        break;
+      case "ACTION":
+        break;
+      default:
+        break;
+    }
+  }
+
   render() {
     if (this.props.embedded && !this.props.query) {
       assert(
@@ -216,13 +240,20 @@ class ViewContainer extends React.Component<Props, State> {
         </header>
         {(actions || view.pageable) && (
           <div className="content-actions">
-            {view.pageable && (
-              <Pagination
-                {...view.pageable}
-                label="Page"
-                onChange={this.handleChangePage}
-              />
-            )}
+            <div className="content-actions__container container">
+              {actions && (
+                <div className="vp__buttons">
+                  <Toolbar actions={actions} onAction={this.handleAction} />
+                </div>
+              )}
+              {view.pageable && (
+                <Pagination
+                  {...view.pageable}
+                  label="Page"
+                  onChange={this.handleChangePage}
+                />
+              )}
+            </div>
           </div>
         )}
         <div className="content-body" style={{ padding: 0 }}>

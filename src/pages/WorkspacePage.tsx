@@ -18,7 +18,7 @@ import { logout } from "../actions/user.actions";
 import { isMobile } from "../utils";
 import { Navbar } from "../components/Navbar";
 import { Sidenav } from "../components/Sidenav";
-import UserProfile from "../components/UserProfile";
+import { UserProfile } from "../components/UserProfile";
 import { WorkspaceDbGrid } from "../components/WorkspaceDbGrid";
 import DocumentContainer from "../containers/DocumentContainer";
 import ViewContainer from "../containers/ViewContainer";

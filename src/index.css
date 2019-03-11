@@ -57,3 +57,11 @@ code {
 .dropdown-menu {
   max-width: 100vw;
 }
+
+.b-toolbar__dropdown > .b-toolbar__dropdown_menu {
+  left: 0;
+}
+
+.vp__buttons {
+  margin-right: auto;
+}

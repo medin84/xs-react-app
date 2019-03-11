@@ -1,22 +1,22 @@
 import React from "react";
 
 import { IFormElement, IAction, IDocument } from "../../interfaces";
-import Fieldset from "./FormFieldset";
-import FormField from "./FormField";
-import Toolbar from "../Toolbar";
+import { FormFieldset } from "./FormFieldset";
+import { FormField } from "./FormField";
+import { Toolbar } from "../Toolbar";
 
-interface FormProps {
+interface Props {
   data: IDocument<any>;
   schema: IFormElement[];
   onAction: (action: IAction) => void;
   onChange?: (field: IFormElement, newValue: any) => void;
 }
 
-interface FormState {
+interface State {
   data: IDocument<any>;
 }
 
-class FormElement extends React.Component<FormProps, FormState> {
+export class FormElement extends React.Component<Props, State> {
   renderActions(element: IFormElement) {
     return (
       <div className={element.className}>
@@ -49,21 +49,21 @@ class FormElement extends React.Component<FormProps, FormState> {
 
   renderTab(element: IFormElement) {
     return (
-      <Fieldset schema={element}>
+      <FormFieldset schema={element}>
         {element.children && (
           <FormElement {...this.props} schema={element.children} />
         )}
-      </Fieldset>
+      </FormFieldset>
     );
   }
 
   renderFieldset(element: IFormElement) {
     return (
-      <Fieldset schema={element}>
+      <FormFieldset schema={element}>
         {element.children && (
           <FormElement {...this.props} schema={element.children} />
         )}
-      </Fieldset>
+      </FormFieldset>
     );
   }
 
@@ -111,5 +111,3 @@ class FormElement extends React.Component<FormProps, FormState> {
     );
   }
 }
-
-export default FormElement;

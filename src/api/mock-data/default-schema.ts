@@ -2,36 +2,29 @@ import { IFormElement } from "../../interfaces";
 
 const DefaultSchema: IFormElement[] = [
   {
-    type: "actions",
-    title: "",
-    className: "content-actions",
-    actions: [
+    type: "block",
+    className: "content-header",
+    children: [
       {
-        id: "close",
-        caption: "Close"
+        type: "block",
+        title: "DefaultFormSchema",
+        className: "header-title"
       }
     ]
   },
   {
     type: "block",
-    title: "content-header",
-    className: "content-header"
-  },
-  {
-    type: "block",
-    title: "",
     className: "content-body",
     children: [
       {
         type: "block",
-        title: "DefaultFormSchema",
         className: "alert alert-danger",
         children: [
           {
             type: "text",
-            title: "",
             name: "@form",
-            readOnly: true
+            readOnly: true,
+            title: "Form"
           }
         ]
       },
