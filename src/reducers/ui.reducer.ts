@@ -48,12 +48,15 @@ const ui = (state = initialState, action: any): IUIState => {
       return { ...state, navbarModuleSwitcherVisible: false };
 
     case UI_SIDENAV_OPEN:
+      window.dispatchEvent(new Event("resize"));
       return { ...state, sidenav: { ...state.sidenav, open: true } };
 
     case UI_SIDENAV_CLOSE:
+      window.dispatchEvent(new Event("resize"));
       return { ...state, sidenav: { ...state.sidenav, open: false } };
 
     case UI_TOGGLE_SIDENAV:
+      window.dispatchEvent(new Event("resize"));
       sidenav = { ...state.sidenav, open: !state.sidenav.open };
       return { ...state, sidenav };
 

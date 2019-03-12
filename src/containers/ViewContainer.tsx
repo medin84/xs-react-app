@@ -10,10 +10,10 @@ import {
   IDominoViewColumn,
   IDominoViewRow
 } from "../interfaces";
-import { apiService } from "../api/api.service";
+import { API } from "../api/api.service";
 import { assert } from "../utils";
 import View from "../components/view/View";
-import { Toolbar } from "../components/Toolbar";
+import { ActionBar } from "../components/ActionBar";
 import { Pagination } from "../components/Pagination";
 import { LoadSpinner } from "../components/LoadSpinner";
 
@@ -101,8 +101,7 @@ class ViewContainer extends React.Component<Props, State> {
 
     const dbid = params.get("dbid") || "";
 
-    apiService
-      .getView(params, { cancelToken: this.request.token })
+    API.getView(params, { cancelToken: this.request.token })
       .then(response => {
         this.setState({
           loading: false,
@@ -243,7 +242,7 @@ class ViewContainer extends React.Component<Props, State> {
             <div className="content-actions__container container">
               {actions && (
                 <div className="vp__buttons">
-                  <Toolbar actions={actions} onAction={this.handleAction} />
+                  <ActionBar actions={actions} onAction={this.handleAction} />
                 </div>
               )}
               {view.pageable && (

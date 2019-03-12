@@ -35,7 +35,7 @@ export function NavbarUserMenu(props: UserMenuProps) {
           </a>
         </div>
       )}
-      <Dropdown className="nav-item to-left">
+      <Dropdown className="nav-item">
         <DropdownToggle className="no-arrow user-menu">
           <span className="icon-user">
             <i className="fa fa-user" />

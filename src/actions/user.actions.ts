@@ -2,7 +2,7 @@ import { Dispatch } from "redux";
 
 import { IApplicationState } from "../interfaces";
 import { setUIState } from "./ui.actions";
-import { apiService } from "../api/api.service";
+import { API } from "../api/api.service";
 import { LoginFormState } from "../components/Login";
 
 export const FETCH_SESSION = "FETCH_SESSION";
@@ -33,8 +33,7 @@ const loginError = (error: any) => ({
 });
 
 export const fetchSession = () => async (dispatch: Dispatch) => {
-  await apiService
-    .fetchSession()
+  await API.fetchSession()
     .then(response => {
       dispatch(setUIState(response.ui));
       dispatch(fetchSessionSuccess(response));
@@ -45,8 +44,7 @@ export const fetchSession = () => async (dispatch: Dispatch) => {
 };
 
 export const login = (loginState: LoginFormState) => (dispatch: Dispatch) => {
-  apiService
-    .login(loginState)
+  API.login(loginState)
     .then(() => {
       fetchSession()(dispatch);
     })
@@ -56,7 +54,7 @@ export const login = (loginState: LoginFormState) => (dispatch: Dispatch) => {
 };
 
 export const logout = () => (dispatch: Dispatch) => {
-  apiService.logout().finally(() => {
+  API.logout().finally(() => {
     dispatch({ type: LOGOUT });
   });
 };

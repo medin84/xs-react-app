@@ -4,7 +4,7 @@ import { IFormElement, IDocument } from "../../interfaces";
 
 interface Props {
   schema: IFormElement;
-  data: IDocument<any>;
+  data: IDocument;
   onChange?: (field: IFormElement, newValue: any) => void;
 }
 

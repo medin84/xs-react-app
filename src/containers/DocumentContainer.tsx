@@ -3,10 +3,10 @@ import { RouteComponentProps, withRouter } from "react-router-dom";
 import axios from "axios";
 
 import { IApiDocumentResponse, IFormElement, IAction } from "../interfaces";
-import { apiService } from "../api/api.service";
+import { API } from "../api/api.service";
 import { assert } from "../utils";
 import { FormElement } from "../components/form/FormElement";
-import { Toolbar } from "../components/Toolbar";
+import { ActionBar } from "../components/ActionBar";
 import { LoadSpinner } from "../components/LoadSpinner";
 
 interface Props extends RouteComponentProps {
@@ -68,11 +68,7 @@ class DocumentContainer extends React.Component<Props, State> {
         this.props.history.goBack();
         break;
       case "ACTION":
-        apiService.doDocumentsActionRequest(
-          action,
-          [this.state.data.document],
-          {}
-        );
+        API.doDocumentsActionRequest(action, [this.state.data.document], {});
         break;
       default:
         break;
@@ -97,8 +93,7 @@ class DocumentContainer extends React.Component<Props, State> {
 
     this.setState({ loading: true });
 
-    apiService
-      .getDocument(params, { cancelToken: this.request.token })
+    API.getDocument(params, { cancelToken: this.request.token })
       .then(response => {
         this.setState({ data: response.data, loading: false });
       })
@@ -136,7 +131,7 @@ class DocumentContainer extends React.Component<Props, State> {
           {actions && (
             <div className="content-actions">
               <div className="content-actions__container">
-                <Toolbar actions={actions} onAction={this.handleAction} />
+                <ActionBar actions={actions} onAction={this.handleAction} />
               </div>
             </div>
           )}

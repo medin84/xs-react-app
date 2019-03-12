@@ -13,13 +13,13 @@ const ws: INavEntry = {
   defaultUrl: config.URL_WS
 };
 
-interface NavbarModuleSwitcherProps {
+interface Props {
   modules: INavEntry[];
 }
 
-export function NavbarModuleSwitcher(props: NavbarModuleSwitcherProps) {
+export function NavbarModuleSwitcher(props: Props) {
   return (
-    <Dropdown className="to-left nav-item nav-ws-apps">
+    <Dropdown className="nav-item nav-ws-apps">
       <DropdownToggle className="nav-ws-apps__toggle no-arrow">
         <i className="fa fa-th" />
       </DropdownToggle>

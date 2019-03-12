@@ -3,24 +3,24 @@ import React from "react";
 import { IFormElement, IAction, IDocument } from "../../interfaces";
 import { FormFieldset } from "./FormFieldset";
 import { FormField } from "./FormField";
-import { Toolbar } from "../Toolbar";
+import { ActionBar } from "../ActionBar";
 
 interface Props {
-  data: IDocument<any>;
+  data: IDocument;
   schema: IFormElement[];
   onAction: (action: IAction) => void;
   onChange?: (field: IFormElement, newValue: any) => void;
 }
 
 interface State {
-  data: IDocument<any>;
+  data: IDocument;
 }
 
 export class FormElement extends React.Component<Props, State> {
   renderActions(element: IFormElement) {
     return (
       <div className={element.className}>
-        <Toolbar
+        <ActionBar
           actions={element.actions || []}
           onAction={this.props.onAction}
         />

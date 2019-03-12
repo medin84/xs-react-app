@@ -23,6 +23,6 @@ export interface IApiViewResponse {
 
 export interface IApiDocumentResponse {
   actions: IAction[];
-  document: IDocument<any>;
+  document: IDocument;
   schema: IFormElement[];
 }

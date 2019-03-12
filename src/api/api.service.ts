@@ -133,7 +133,7 @@ const getDocument = (
 
 const doDocumentsActionRequest = (
   action: IAction,
-  documents: IDocument<any>[],
+  documents: IDocument[],
   payload: any
 ): Promise<IApiResponse<IApiDocumentResponse>> => {
   return axios
@@ -177,7 +177,7 @@ const _logout = async () => {
 };
 ////////////
 
-export const apiService = {
+export const API = {
   fetchSession: config.isEnvProduction ? fetchSession : _fetchSession,
   login: config.isEnvProduction ? login : _login,
   logout: config.isEnvProduction ? logout : _logout,

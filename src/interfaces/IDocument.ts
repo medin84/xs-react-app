@@ -1,3 +1,5 @@
-export interface IDocument<T> {
-  [key: string]: T;
+export interface IDocument {
+  "@unid": string;
+  "@form": string;
+  [key: string]: any;
 }

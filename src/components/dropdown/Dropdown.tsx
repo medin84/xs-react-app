@@ -23,7 +23,6 @@ interface State extends PositionState {
 }
 
 const DEFAULT_PROPS = {
-  trigger: "HOVER",
   isOpenClassName: "open",
   toggle: ".dropdown-toggle",
   content: ".dropdown-menu",
@@ -79,7 +78,7 @@ function getContentPosition(el: HTMLDivElement | null): PositionState {
   };
 }
 
-class Dropdown extends React.PureComponent<Props, State> {
+export class Dropdown extends React.PureComponent<Props, State> {
   documentClickListener: any;
   documentKeyupListener: any;
   clickEventListeners: {
@@ -93,7 +92,7 @@ class Dropdown extends React.PureComponent<Props, State> {
   selfClick = false;
 
   isOpenByClick = false;
-  isMouseHoverTrigger = false;
+  isMouseEnabled = false;
   timeout: any;
   timeout2: any;
 
@@ -109,8 +108,8 @@ class Dropdown extends React.PureComponent<Props, State> {
 
     this.ref = React.createRef();
     this.id = genId();
-    this.isMouseHoverTrigger =
-      !IS_TOUCH && (props.trigger || DEFAULT_PROPS.trigger) === "HOVER";
+    this.isMouseEnabled =
+      !IS_TOUCH && (props.trigger === "HOVER" || !props.trigger);
 
     this.handleClick = this.handleClick.bind(this);
     this.handleMouseEnter = this.handleMouseEnter.bind(this);
@@ -162,28 +161,28 @@ class Dropdown extends React.PureComponent<Props, State> {
       const toggleSelector = this.props.toggle || DEFAULT_PROPS.toggle,
         toggleElement = el.querySelector(toggleSelector);
       if (toggleElement) {
-        const toggleEventListener = {
+        const toggleEvent = {
           element: toggleElement,
           fn: (e: Event) => {
             e.preventDefault();
             this.handleClick({ isToggle: true });
           }
         };
-        toggleElement.addEventListener("click", toggleEventListener.fn);
-        this.clickEventListeners.push(toggleEventListener);
+        toggleElement.addEventListener("click", toggleEvent.fn);
+        this.clickEventListeners.push(toggleEvent);
       }
 
       const contentSelector = this.props.content || DEFAULT_PROPS.content,
         contentElement = el.querySelector(contentSelector);
       if (contentElement) {
-        const contentEventListener = {
+        const contentEvent = {
           element: contentElement,
           fn: (e: Event) => {
             this.handleClick({ isContent: true });
           }
         };
-        contentElement.addEventListener("click", contentEventListener.fn);
-        this.clickEventListeners.push(contentEventListener);
+        contentElement.addEventListener("click", contentEvent.fn);
+        this.clickEventListeners.push(contentEvent);
       }
     }
   }
@@ -218,7 +217,7 @@ class Dropdown extends React.PureComponent<Props, State> {
       return;
     }
 
-    if (this.isMouseHoverTrigger) {
+    if (this.isMouseEnabled) {
       isMouseEnter = true;
       this.setOpen();
       if (this.id === mouseOutId) {
@@ -233,7 +232,7 @@ class Dropdown extends React.PureComponent<Props, State> {
       return;
     }
 
-    if (this.isMouseHoverTrigger) {
+    if (this.isMouseEnabled) {
       isMouseEnter = false;
       mouseOutId = this.id;
 
@@ -265,14 +264,18 @@ class Dropdown extends React.PureComponent<Props, State> {
   }
 
   setOpen() {
-    this.setState({ isOpen: true, ...getContentPosition(this.ref.current) });
-    this.props.onOpen && this.props.onOpen();
+    if (!this.state.isOpen) {
+      this.setState({ isOpen: true, ...getContentPosition(this.ref.current) });
+      this.props.onOpen && this.props.onOpen();
+    }
   }
 
   setClose() {
     this.isOpenByClick = false;
-    this.setState({ isOpen: false });
-    this.props.onClose && this.props.onClose();
+    if (this.state.isOpen) {
+      this.setState({ isOpen: false });
+      this.props.onClose && this.props.onClose();
+    }
   }
 
   render() {
@@ -292,5 +295,3 @@ class Dropdown extends React.PureComponent<Props, State> {
     );
   }
 }
-
-export { Dropdown };
