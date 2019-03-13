@@ -2,7 +2,7 @@ import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import axios from "axios";
 
-import { IApiDocumentResponse, IFormElement, IAction } from "../interfaces";
+import { IFormElement, IAction, IDocument } from "../interfaces";
 import { API } from "../api/api.service";
 import { assert } from "../utils";
 import { FormElement } from "../components/form/FormElement";
@@ -16,7 +16,9 @@ interface Props extends RouteComponentProps {
 
 interface State {
   loading: boolean;
-  data: IApiDocumentResponse;
+  actions: IAction[];
+  document: IDocument;
+  schema: IFormElement[];
 }
 
 class DocumentContainer extends React.Component<Props, State> {
@@ -68,7 +70,7 @@ class DocumentContainer extends React.Component<Props, State> {
         this.props.history.goBack();
         break;
       case "ACTION":
-        API.doDocumentsActionRequest(action, [this.state.data.document], {});
+        API.doDocumentsActionRequest(action, [this.state.document], {});
         break;
       default:
         break;
@@ -76,15 +78,11 @@ class DocumentContainer extends React.Component<Props, State> {
   }
 
   handleChange(field: IFormElement, newValue: any): void {
-    if (!this.state.data) {
-      return;
-    }
-
     if (field.name) {
-      this.state.data.document[field.name] = newValue;
+      this.state.document[field.name] = newValue;
     }
 
-    console.log("handleChange", field, newValue, this.state.data.document);
+    console.log("handleChange", field, newValue, this.state.document);
   }
 
   fetchDocument(params: URLSearchParams) {
@@ -94,12 +92,17 @@ class DocumentContainer extends React.Component<Props, State> {
     this.setState({ loading: true });
 
     API.getDocument(params, { cancelToken: this.request.token })
-      .then(response => {
-        this.setState({ data: response.data, loading: false });
+      .then(({ data }) => {
+        this.setState({
+          loading: false,
+          actions: data.actions,
+          document: data.document,
+          schema: data.schema
+        });
       })
       .catch(err => {
         if (!axios.isCancel(err)) {
-          this.setState(state => ({ ...state, loading: false }));
+          this.setState({ loading: false });
         }
       });
   }
@@ -117,12 +120,10 @@ class DocumentContainer extends React.Component<Props, State> {
       return null;
     }
 
-    const { loading, data } = this.state;
-    if (loading && !data) {
+    const { loading, actions, document, schema } = this.state;
+    if (loading && !document) {
       return <LoadSpinner />;
     }
-
-    const { actions, schema, document } = data;
 
     return (
       <div className="form">

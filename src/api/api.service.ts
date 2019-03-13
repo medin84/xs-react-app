@@ -69,10 +69,10 @@ const fetchSession = (): Promise<IApplicationState> => {
 };
 
 const login = (login: LoginFormState): Promise<any> => {
-  const authCredentials = new URLSearchParams();
-  authCredentials.set("login", login.login);
-  authCredentials.set("pwd", login.pwd);
-  authCredentials.set("saveauth", login.saveAuth ? "1" : "");
+  const params = new URLSearchParams();
+  params.set("login", login.login);
+  params.set("pwd", login.pwd);
+  params.set("saveauth", login.saveAuth ? "1" : "");
 
   return axios({
     url: `${config.HOST}/Login`,
@@ -80,7 +80,7 @@ const login = (login: LoginFormState): Promise<any> => {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     },
-    data: authCredentials
+    data: params
   });
 };
 

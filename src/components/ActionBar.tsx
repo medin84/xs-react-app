@@ -19,22 +19,22 @@ function ActionButton(props: {
   action: IAction;
   onClick: (action: IAction) => void;
 }): React.ReactElement {
+  const { action, onClick } = props;
+
   return (
     <button
       type="button"
-      className={`btn b-toolbar__btn ${
-        props.action.primary ? "btn-primary" : ""
-      } ${props.action.disabled ? "disabled" : ""}`}
-      disabled={props.action.disabled}
-      onClick={() => props.onClick(props.action)}
+      className={`btn b-toolbar__btn ${action.primary ? "btn-primary" : ""} ${
+        action.disabled ? "disabled" : ""
+      }`}
+      disabled={action.disabled}
+      onClick={() => onClick(action)}
     >
-      {props.action.icon && (
-        <i className={`btn-icon b-toolbar__btn_icon ${props.action.icon}`} />
+      {action.icon && (
+        <i className={`btn-icon b-toolbar__btn_icon ${action.icon}`} />
       )}
-      {props.action.caption && (
-        <span className="btn-label b-toolbar__btn_label">
-          {props.action.caption}
-        </span>
+      {action.caption && (
+        <span className="btn-label b-toolbar__btn_label">{action.caption}</span>
       )}
     </button>
   );

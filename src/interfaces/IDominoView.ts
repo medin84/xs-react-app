@@ -54,6 +54,7 @@ export interface IDominoParam {
   dbTitle: string;
   viewName: string;
   viewTitle: string;
+  dbid: string;
   indentValue: string;
   readOnly: false;
   selectable: boolean;

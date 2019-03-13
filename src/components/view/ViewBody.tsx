@@ -17,11 +17,8 @@ import {
 } from "./view.util";
 
 interface Props {
-  dbid: string;
-  data: {
-    view: IDominoView;
-    param: IDominoParam;
-  };
+  view: IDominoView;
+  param: IDominoParam;
   onDocumentHover: (row: IDominoViewRow) => void;
   onDocumentClick: (row: IDominoViewRow) => void;
   onExpandableClick: (row: IDominoViewRow) => void;
@@ -34,11 +31,16 @@ interface State {
 
 class ViewBody extends React.Component<Props, State> {
   getDocumentLinkProps(unid: string) {
+    const search = new URLSearchParams();
+    if (this.props.param.dbid) {
+      search.set("dbid", this.props.param.dbid);
+    }
+    search.set("database", this.props.param.database);
+    search.set("document", unid);
+
     return {
       pathname: config.URL_DOCUMENT,
-      search: `?dbid=${this.props.dbid}&database=${
-        this.props.data.param.database
-      }&document=${unid}`
+      search: `?${search}`
     };
   }
 
@@ -47,7 +49,7 @@ class ViewBody extends React.Component<Props, State> {
       return value;
     }
 
-    if (this.props.data.param.readOnly) {
+    if (this.props.param.readOnly) {
       return (
         <span className="view__text" style={getCellStyle(column)}>
           {value}
@@ -79,13 +81,13 @@ class ViewBody extends React.Component<Props, State> {
     }
 
     if (column.icon) {
-      const { iconPath, iconPrfx, iconExt } = this.props.data.param;
+      const { iconPath, iconPrfx, iconExt } = this.props.param;
       return (
         <td className="view__col view__col--icon">
           <img src={`${iconPath}${iconPrfx}${value}${iconExt}`} />
         </td>
       );
-    } else if (value === this.props.data.param.indentValue) {
+    } else if (value === this.props.param.indentValue) {
       return <td className="view__col view__col--category-indent" />;
     }
 
@@ -141,11 +143,7 @@ class ViewBody extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      data: { view, param },
-      onDocumentHover,
-      onChangePage
-    } = this.props;
+    const { view, param, onDocumentHover, onChangePage } = this.props;
     let rowCellsCount: number,
       colCount: number,
       colSpan = 0,

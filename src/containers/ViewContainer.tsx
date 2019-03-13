@@ -5,8 +5,9 @@ import axios from "axios";
 
 import {
   IAction,
-  IApiViewResponse,
   IApplicationState,
+  IDominoView,
+  IDominoParam,
   IDominoViewColumn,
   IDominoViewRow
 } from "../interfaces";
@@ -24,9 +25,10 @@ interface Props extends IApplicationState, RouteComponentProps {
 
 interface State {
   loading: boolean;
-  dbid: string;
-  query: string;
-  data?: IApiViewResponse;
+  query: URLSearchParams;
+  actions?: IAction[];
+  view?: IDominoView;
+  param?: IDominoParam;
 }
 
 class ViewContainer extends React.Component<Props, State> {
@@ -38,8 +40,7 @@ class ViewContainer extends React.Component<Props, State> {
 
     this.state = {
       loading: false,
-      query: props.location.search,
-      dbid: ""
+      query: new URLSearchParams(props.location.search)
     };
 
     this.handleAction = this.handleAction.bind(this);
@@ -97,22 +98,23 @@ class ViewContainer extends React.Component<Props, State> {
     this.request && this.request.cancel();
     this.request = axios.CancelToken.source();
 
-    this.setState(state => ({ ...state, loading: true }));
-
-    const dbid = params.get("dbid") || "";
+    this.setState({ loading: true });
 
     API.getView(params, { cancelToken: this.request.token })
-      .then(response => {
+      .then(({ data }) => {
+        data.param.dbid = data.param.dbid || params.get("dbid") || "";
+
         this.setState({
           loading: false,
-          query: `?${params}`,
-          dbid: dbid,
-          data: response.data
+          query: params,
+          actions: data.actions,
+          view: data.view,
+          param: data.param
         });
       })
       .catch(err => {
         if (!axios.isCancel(err)) {
-          this.setState(state => ({ ...state, loading: false }));
+          this.setState({ loading: false });
         }
       });
   }
@@ -174,9 +176,11 @@ class ViewContainer extends React.Component<Props, State> {
 
   handleChangeView(viewName: string) {
     const params = new URLSearchParams(this.state.query);
-    params.set("view", viewName);
     params.delete("sort");
     params.delete("page");
+    params.delete("collapse");
+    params.delete("expand");
+    params.set("view", viewName);
 
     this.doQuery(params);
   }
@@ -220,16 +224,12 @@ class ViewContainer extends React.Component<Props, State> {
       );
     }
 
-    const { loading, dbid, data } = this.state;
-    if (loading && !data) {
+    const { loading, actions, view, param } = this.state;
+    if (loading && !view) {
       return <LoadSpinner />;
-    }
-
-    if (!data) {
+    } else if (!view || !param) {
       return null;
     }
-
-    const { actions, view, param } = data;
 
     return (
       <>
@@ -257,8 +257,8 @@ class ViewContainer extends React.Component<Props, State> {
         )}
         <div className="content-body" style={{ padding: 0 }}>
           <View
-            dbid={dbid}
-            data={data}
+            view={view}
+            param={param}
             selectedIds={[]}
             onDocumentHover={this.handleDocumentHover}
             onDocumentClick={this.handleDocumentClick}

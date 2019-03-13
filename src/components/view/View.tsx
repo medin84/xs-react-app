@@ -11,11 +11,8 @@ import ViewHead from "./ViewHead";
 import ViewBody from "./ViewBody";
 
 interface ViewProps {
-  dbid: string;
-  data: {
-    view: IDominoView;
-    param: IDominoParam;
-  };
+  view: IDominoView;
+  param: IDominoParam;
   selectedIds: string[];
   onDocumentHover: (row: IDominoViewRow) => void;
   onDocumentClick: (row: IDominoViewRow) => void;
@@ -27,11 +24,7 @@ interface ViewProps {
 
 class View extends React.Component<ViewProps> {
   render() {
-    const {
-      data: { view, param },
-      onChangeView,
-      onSort
-    } = this.props;
+    const { view, param, onChangeView, onSort } = this.props;
     const hasRows = view.rows && view.rows.length > 0;
 
     return (
